@@ -12,13 +12,14 @@ exports.reporter = function (reports) {
 		reports.filter(function (report) { // filter command line flags errors
 			return report.error.line > 1;
 		}).map(function (report) {
-			var error = report.error;
+			var error = report.error,
+				code = error.code;
 
 			return [
 				error.line - 2, // quickfix lines starts with 1 + 1 line for command line flags
 				error.character,
-				error.code[0],
-				parseInt(error.code.substr(1), 10), // quickfix strips leading zeros in error numbers
+				code ? code[0] : '',
+				code ? parseInt(code.substr(1), 10) : '', // quickfix strips leading zeros in error numbers
 				error.reason
 			].join('\t');
 		}).join('\n')
