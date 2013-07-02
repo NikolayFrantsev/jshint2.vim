@@ -77,6 +77,9 @@ function! s:Lint(start, stop, show, ...)
 		\ '{"bufnr": '.b:buffer.', "lnum": str2nr(v:val[0] + a:start), "col": str2nr(v:val[1]),
 			\ "type": v:val[2], "nr": str2nr(v:val[3]), "text": v:val[4]}')
 
+	" close old quickfix list
+	cclose
+
 	" replace quickfix with new data
 	call setqflist(qflist, 'r')
 
@@ -87,10 +90,10 @@ function! s:Lint(start, stop, show, ...)
 
 		" open quickfix list if there is no bang
 		if a:show
-			copen
+			belowright copen
 
 			" open error in new tab
-			nnoremap <silent><buffer>t <C-W><CR><C-W>T:copen<CR><C-W>p
+			nnoremap <silent><buffer>t <C-W><CR><C-W>T:belowright copen<CR><C-W>p
 
 			" open error in new split
 			nnoremap <silent><buffer>s <C-W><CR><C-W>=
@@ -106,9 +109,6 @@ function! s:Lint(start, stop, show, ...)
 		endif
 	else
 		echo 'No errors found!'
-
-		" close quickfix list if there no errors
-		cclose
 	endif
 
 	return length
