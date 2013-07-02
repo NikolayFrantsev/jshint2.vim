@@ -41,7 +41,7 @@ endfunction
 let s:execute = 'jshint --reporter='.shellescape(b:jshint2_path.'reporter.js').' /dev/stdin'
 
 " save buffer number
-let b:buffer = bufnr('%')
+let b:jshint2_buffer = bufnr('%')
 
 " linting buffer
 function! s:Lint(start, stop, show, ...)
@@ -74,7 +74,7 @@ function! s:Lint(start, stop, show, ...)
 
 	" convert shell output into quickfix dictionary
 	let qflist = map(map(split(report, "\n"), 'split(v:val, "\t")'),
-		\ '{"bufnr": '.b:buffer.', "lnum": str2nr(v:val[0] + a:start), "col": str2nr(v:val[1]),
+		\ '{"bufnr": '.b:jshint2_buffer.', "lnum": str2nr(v:val[0] + a:start), "col": str2nr(v:val[1]),
 			\ "type": v:val[2], "nr": str2nr(v:val[3]), "text": v:val[4]}')
 
 	" close old quickfix list
