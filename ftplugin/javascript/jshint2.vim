@@ -43,7 +43,7 @@ let s:execute = 'jshint --reporter='.shellescape(b:jshint2_path.'reporter.js').'
 " save buffer number
 let b:jshint2_buffer = bufnr('%')
 
-" linting buffer
+" lint buffer
 function! s:Lint(start, stop, show, ...)
 	" check if shell binary installed
 	if !executable(split(s:execute, '\s\+')[0])
@@ -91,21 +91,6 @@ function! s:Lint(start, stop, show, ...)
 		" open quickfix list if there is no bang
 		if a:show
 			belowright copen
-
-			" open error in new tab
-			nnoremap <silent><buffer>t <C-W><CR><C-W>T:belowright copen<CR><C-W>p
-
-			" open error in new split
-			nnoremap <silent><buffer>s <C-W><CR><C-W>=
-
-			" open error in new vertical split
-			nnoremap <silent><buffer>v <C-W><CR><C-W>L
-
-			" scroll to selected error
-			nnoremap <silent><buffer>n <CR><C-W>p
-
-			" close error list
-			nnoremap <silent><buffer>q <C-W>p:cclose<CR>
 		endif
 	else
 		echo 'No errors found!'
@@ -114,6 +99,43 @@ function! s:Lint(start, stop, show, ...)
 	return length
 endfunction
 
+" map quickfix shourtcuts
+function! s:Map()
+	" switch to previous buffer
+	execute "normal \<C-W>p"
+
+	" save plugin loaded flag
+	let g:jshint2_map=exists("b:jshint2_path")
+
+	" switch back to quickfix list
+	execute "normal \<C-W>p"
+
+	" map commands if plugin where loaded
+	if g:jshint2_map
+		" open error in new tab
+		nnoremap <silent><buffer>t <C-W><CR><C-W>T:belowright copen<CR><C-W>p
+
+		" open error in new split
+		nnoremap <silent><buffer>s <C-W><CR><C-W>=
+
+		" open error in new vertical split
+		nnoremap <silent><buffer>v <C-W><CR><C-W>L
+
+		" scroll to selected error
+		nnoremap <silent><buffer>n <CR><C-W>p
+
+		" close error list
+		nnoremap <silent><buffer>q <C-W>p:cclose<CR>
+	endif
+
+	" remove loaded flag
+	unlet g:jshint2_map
+endfunction
+
 " define command line function
-command! -nargs=* -complete=customlist,s:Complete -range=% -bang -bar -buffer
-	\ JSHint call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
+command! -nargs=* -complete=customlist,s:Complete -range=% -bang -bar -buffer JSHint
+	\ call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
+
+" define quickfix list mapper
+autocmd! FileType qf
+	\ call s:Map()
