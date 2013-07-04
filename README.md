@@ -54,12 +54,16 @@ Use tab after `:JSHint` command to autocomplete space separated lint flags — `
 Quick validation mapping:
 
 	nnoremap <silent><F1> :JSHint<CR>
-	inoremap <silent><F1> <C-O>:JSHint<CR>
+	inoremap <silent><F1> :JSHint<CR>
 	vnoremap <silent><F1> :JSHint<CR>
+	cnoremap <F1> JSHint
 
-Lint JS files before saving:
+Lint JavaScript files after opening:
 
-	autocmd! bufwritepre *.js :JSHint<CR>
+	autocmd! BufWinEnter * if &filetype == "javascript" | silent JSHint | endif
+
+Lint JavaScript files before saving:
+	autocmd! BufWritePost * if &filetype == "javascript" | silent JSHint | endif
 
 Error list shortcuts:
 
@@ -71,4 +75,4 @@ Error list shortcuts:
 
 ## LICENSE & AUTHOR
 
-jshint2.vim written by [Nikolay S. Frantsev](http://frantsev.ru/) under [GPL3 License](http://www.gnu.org/licenses/gpl.html).
+Written by [Nikolay S. Frantsev](http://frantsev.ru/) under [GPL3 License](http://www.gnu.org/licenses/gpl.html).
