@@ -63,6 +63,7 @@ Lint JavaScript files after opening:
 	autocmd! BufWinEnter * if &filetype == "javascript" | silent JSHint | endif
 
 Lint JavaScript files before saving:
+
 	autocmd! BufWritePost * if &filetype == "javascript" | silent JSHint | endif
 
 Error list shortcuts:
