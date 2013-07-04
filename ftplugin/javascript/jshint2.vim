@@ -38,10 +38,37 @@ function! s:Complete(arg, cmd, ...)
 endfunction
 
 " save shell command
-let s:execute = 'jshint --reporter='.shellescape(b:jshint2_path.'reporter.js').' /dev/stdin'
+let s:execute = 'jshint'
 
 " save buffer number
 let b:jshint2_buffer = bufnr('%')
+
+function! s:LintCommand()
+	let reporter = ' --reporter='.shellescape(b:jshint2_path.'reporter.js')
+	let input = ' /dev/stdin'
+	let cwd = fnamemodify(getcwd(), ':p')
+	let rc_name = "/.jshintrc"
+
+	let rcfile = ""
+	let config_file = ""
+
+	let i = 0
+	while ! filereadable(cwd.rc_name) && i < 15
+	  let new_dir = fnamemodify(cwd, ':h')
+	  let cwd = new_dir
+	  let i = i + 1
+	endwhile
+
+	if filereadable(cwd.rc_name)
+	  let rcfile = cwd.rc_name
+	endif
+
+	if len(rcfile) > 0
+	  let config_file = " --config ".rcfile
+	endif
+
+	return s:execute . config_file . reporter . input
+endfunction
 
 " lint buffer
 function! s:Lint(start, stop, show, ...)
@@ -61,7 +88,7 @@ function! s:Lint(start, stop, show, ...)
 	let content = insert(getline(a:start, a:stop), flags)
 
 	" run shell linting command
-	let report = system(s:execute, join(content, "\n"))
+	let report = system(s:LintCommand(), join(content, "\n"))
 
 	" check for shell errors
 	if v:shell_error
