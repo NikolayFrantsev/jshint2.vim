@@ -60,8 +60,11 @@ function! s:Lint(start, stop, show, ...)
 	" save whole file or selected lines
 	let content = insert(getline(a:start, a:stop), flags)
 
+	" save buffer path
+	let path = shellescape(expand('%:p:h'))
+
 	" run shell linting command
-	let report = system(s:execute, join(content, "\n"))
+	let report = system('cd '.path.' && '.s:execute, join(content, "\n"))
 
 	" check for shell errors
 	if v:shell_error
@@ -110,7 +113,7 @@ function! s:Map()
 	" switch back to quickfix list
 	execute "normal \<C-W>p"
 
-	" map commands if plugin where loaded
+	" map commands if plugin loaded
 	if g:jshint2_map
 		" open error in new tab
 		nnoremap <silent><buffer>t <C-W><CR><C-W>T:belowright copen<CR><C-W>p
