@@ -34,7 +34,7 @@ function! s:Complete(arg, cmd, ...)
 	let value = a:arg[colon + 1 :]
 
 	" complete flag values
-	return has_key(s:completion, flag) ? map(filter(copy(s:completion[flag]), 'v:val =~ "^".value'), 'flag.":".v:val') : []
+	return has_key(s:completion, flag) ? sort(map(filter(copy(s:completion[flag]), 'v:val =~ "^".value'), 'flag.":".v:val')) : []
 endfunction
 
 " save shell command
