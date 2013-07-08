@@ -52,7 +52,7 @@ function! s:LintCommand()
 	let file = '/.jshintrc'
 
 	" try to find config file
-	while path != "/" && !filereadable(path.file)
+	while path != '/' && !filereadable(path.file)
 		let path = fnamemodify(path, ':h')
 	endwhile
 
@@ -78,6 +78,7 @@ function! s:Lint(start, stop, show, ...)
 	endif
 
 	" save command line flags
+	let b:jshint2_flags = len(a:000) ? join(a:000, ' ').' ' : ''
 	let flags = len(a:000) ? '//jshint '.join(a:000, ', ') : ''
 
 	" save whole file or selected lines
@@ -128,7 +129,7 @@ function! s:Map()
 	execute "normal \<C-W>p"
 
 	" save plugin loaded flag
-	let g:jshint2_map=exists("b:jshint2_path")
+	let g:jshint2_map = exists('b:jshint2_path')
 
 	" switch back to quickfix list
 	execute "normal \<C-W>p"
@@ -144,6 +145,9 @@ function! s:Map()
 		" open error in new vertical split
 		nnoremap <silent><buffer>v <C-W><CR><C-W>L
 
+		" ignore selected error
+		nnoremap <silent><buffer>i :call b:JSHintIgnore()<CR>
+
 		" scroll to selected error
 		nnoremap <silent><buffer>n <CR><C-W>p
 
@@ -153,6 +157,21 @@ function! s:Map()
 
 	" remove loaded flag
 	unlet g:jshint2_map
+endfunction
+
+" revalidate ignoring selected error
+function! b:JSHintIgnore()
+	" save error line
+	let line = getqflist()[line('.') - 1]
+
+	" save error number
+	let error = '-'.line['type'].(('00'.line['nr'])[-3:])
+
+	" switch to previous buffer
+	execute "normal \<C-W>p"
+
+	" revalidate buffer
+	execute ':JSHint '.b:jshint2_flags.error
 endfunction
 
 " define command line function

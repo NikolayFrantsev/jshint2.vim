@@ -71,6 +71,7 @@ Error list shortcuts:
 * `t` — open error in new tab;
 * `s` — open error in new split;
 * `v` — open error in new vertical split;
+* `i` — ignore selected error;
 * `n` — scroll to selected error;
 * `q` — close error list.
 
