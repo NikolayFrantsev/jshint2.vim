@@ -9,7 +9,7 @@
 if exists('b:jshint2_path')
 	finish
 else
-	let b:jshint2_path = expand('<sfile>:h').'/jshint2/'
+	let b:jshint2_path = expand('<sfile>:p:h').'/jshint2/'
 endif
 
 " load completion dictionary
@@ -38,7 +38,30 @@ function! s:Complete(arg, cmd, ...)
 endfunction
 
 " save shell command
-let s:execute = 'jshint --reporter='.shellescape(b:jshint2_path.'reporter.js').' /dev/stdin'
+let s:execute_command = 'jshint'
+
+" save shell command arguments
+let s:execute_arguments = ' --reporter='.shellescape(b:jshint2_path.'reporter.js').' /dev/stdin'
+
+" lint command constructor
+function! s:LintCommand()
+	" current file path
+	let path = expand('%:p:h')
+
+	" config file to find
+	let file = '/.jshintrc'
+
+	" try to find config file
+	while path != "/" && !filereadable(path.file)
+		let path = fnamemodify(path, ':h')
+	endwhile
+
+	" save config argument
+	let config = filereadable(path.file) ? ' --config='.shellescape(path.file) : ''
+
+	" return full shell command
+	return s:execute_command.config.s:execute_arguments
+endfunction
 
 " save buffer number
 let b:jshint2_buffer = bufnr('%')
@@ -46,7 +69,7 @@ let b:jshint2_buffer = bufnr('%')
 " lint buffer
 function! s:Lint(start, stop, show, ...)
 	" check if shell binary installed
-	if !executable(split(s:execute, '\s\+')[0])
+	if !executable(s:execute_command)
 		echohl ErrorMsg
 		echo 'Seems JSHint is not installed!'
 		echohl None
@@ -60,11 +83,8 @@ function! s:Lint(start, stop, show, ...)
 	" save whole file or selected lines
 	let content = insert(getline(a:start, a:stop), flags)
 
-	" save buffer path
-	let path = shellescape(expand('%:p:h'))
-
 	" run shell linting command
-	let report = system('cd '.path.' && '.s:execute, join(content, "\n"))
+	let report = system(s:LintCommand(), join(content, "\n"))
 
 	" check for shell errors
 	if v:shell_error
