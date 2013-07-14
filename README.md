@@ -30,7 +30,7 @@ Lightweight and functional Vim plugin for [JSHint](http://jshint.com/) integrati
 
 3. Install jshint2.vim plugin:
 
-	If you have [Pahtogen](https://github.com/tpope/vim-pathogen):
+	If you have [Pathogen](https://github.com/tpope/vim-pathogen):
 
 		$ git clone https://github.com/Shutnik/jshint2.vim.git ~/.vim/bundle/jshint2.vim/
 
