@@ -8,22 +8,22 @@
 /*jshint node:true*/
 
 exports.reporter = function (reports) {
-	process.stdout.write(
-		reports.filter(function (report) { // filter command line flags errors
-			return report.error.line > 1;
-		}).map(function (report) {
-			var error = report.error,
-				code = error.code;
+	var index = -1, length = reports.length,
+		error, line, code,
+		result = '';
 
-			return [
-				error.line - 2, // quickfix lines starts with 1 + 1 line for command line flags
-				error.character,
-				code ? code[0] : '',
-				code ? parseInt(code.substr(1), 10) : '', // quickfix strips leading zeros in error numbers
-				error.reason
-			].join('\t');
-		}).join('\n')
-	);
+	while (++index < length) {
+		if ((line = (error = reports[index].error).line) > 1) { // filter command line flags errors
+			result +=
+				(line - 2) + '\t' + // quickfix lines starts with 1 + 1 line for command line flags
+				error.character + '\t' +
+				((typeof (code = error.code) === 'string') ? // see https://github.com/jshint/jshint/pull/1164
+					code[0] + '\t' + (+code.substring(1)) : '\t') + '\t' + // quickfix strips leading zeros in error numbers
+				error.reason + '\n';
+		}
+	}
+
+	process.stdout.write(result);
 
 	process.exit(0); // prevent showing shell error
 };
