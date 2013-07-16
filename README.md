@@ -2,6 +2,8 @@
 
 Lightweight and functional Vim plugin for [JSHint](http://jshint.com/) integration.
 
+![jshint2.vim](https://raw.github.com/Shutnik/jshint2.vim/master/screenshot.png)
+
 ## FEATURES
 
 * Linting whole file or selected lines without saving to disk;
