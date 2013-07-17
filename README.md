@@ -4,59 +4,43 @@ Lightweight and functional Vim plugin for [JSHint](http://jshint.com/) integrati
 
 ![jshint2.vim](https://raw.github.com/Shutnik/jshint2.vim/master/screenshot.png)
 
-## FEATURES
+## Features
 
-* Linting whole file or selected lines without saving to disk;
-
-* Finding `.jshintrc` configuration files inside linting file path on upper in directories;
-
-* Optionally opening list of linting errors with useful shortcuts;
-
+* Linting whole file or selected lines without saving to disk.
+* Finding configuration files inside linting file path on upper in directories.
+* Optionally opening list of linting errors with useful shortcuts.
 * Setting lint flags from command line with autocompletion.
 
-## INSTALLION
+## Installation
 
-1. Install NodeJS:
+1. Install [Node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
+2. Globally install [JSHint](http://jshint.com/install/).
+3. Place [.jshintrc](http://www.jshint.com/docs/#config) into your `~`, optionally place it into your project directory.
+4. Install [Pathogen](https://github.com/tpope/vim-pathogen).
+5. Place plugin into your `~/.vim/bundle/jshint2.vim/`.
 
-	On Ubuntu/Debian:
+## Usage
 
-		# apt-get install node
+Use `:JSHint` command inside Vim to lint whole file or `:'<,'>JSHint` to lint only selected lines.  
+Add `!` to suppress opening error list (number of lint errors still will be shown) — `:JSHint!`.  
+Add space and use tab key to complete space separated lint flags — `:JSHint white:true eqeqeq:true`.  
+Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.  
 
-	On ArchLinux:
+## Error List Shortcuts
 
-		# pacman -S node
+`t` — open error in new tab.  
+`s` — open error in new split.  
+`v` — open error in new vertical split.  
+`i` — ignore selected error.  
+`n` — scroll to selected error.  
+`q` — close error list.  
 
-2. Install JSHint package or update it to latest version:
+## Tips
 
-		# npm install --global jshint
-
-3. Install jshint2.vim plugin:
-
-	If you have [Pathogen](https://github.com/tpope/vim-pathogen):
-
-		$ git clone https://github.com/Shutnik/jshint2.vim.git ~/.vim/bundle/jshint2.vim/
-
-	If you don't have [Pathogen](https://github.com/tpope/vim-pathogen):
-
-		$ git clone https://github.com/Shutnik/jshint2.vim.git
-		$ cp jshint2.vim/* ~/.vim/
-
-4. Place [JSHint configuration file](http://www.jshint.com/docs/#config) into your `~`, optionally place it into your project directory.
-
-## USAGE
-
-Use `:JSHint` command inside Vim for lint whole file or `:'<,'>JSHint` for lint selected lines.
-
-Use `:JSHint!` to suppress opening error list (number of linting errors still will be shown).
-
-Use tab after `:JSHint` command to autocomplete space separated lint flags — `:JSHint white:true eqeqeq:true`.
-
-## TIPS
-
-Quick validation mapping:
+Quick lint mapping:
 
 	nnoremap <silent><F1> :JSHint<CR>
-	inoremap <silent><F1> :JSHint<CR>
+	inoremap <silent><F1> <C-O>:JSHint<CR>
 	vnoremap <silent><F1> :JSHint<CR>
 	cnoremap <F1> JSHint
 
@@ -68,15 +52,6 @@ Lint JavaScript files before saving:
 
 	autocmd! BufWritePost * if &filetype == "javascript" | silent JSHint | endif
 
-Error list shortcuts:
-
-* `t` — open error in new tab;
-* `s` — open error in new split;
-* `v` — open error in new vertical split;
-* `i` — ignore selected error;
-* `n` — scroll to selected error;
-* `q` — close error list.
-
-## LICENSE & AUTHOR
+## Author & License
 
 Written by [Nikolay S. Frantsev](http://frantsev.ru/) under [GPL3 License](http://www.gnu.org/licenses/gpl.html).

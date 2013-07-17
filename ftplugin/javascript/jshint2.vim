@@ -123,7 +123,7 @@ function! s:Lint(start, stop, show, ...)
 	return length
 endfunction
 
-" map quickfix shourtcuts
+" map quickfix shortcuts
 function! s:Map()
 	" switch to previous buffer
 	execute "normal \<C-W>p"
