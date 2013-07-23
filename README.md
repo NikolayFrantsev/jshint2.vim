@@ -44,13 +44,13 @@ Quick lint mapping:
 	vnoremap <silent><F1> :JSHint<CR>
 	cnoremap <F1> JSHint
 
-Lint JavaScript files after opening (place after [infectig](https://github.com/tpope/vim-pathogen#runtime-path-manipulation) Pathogen):
+Lint JavaScript files after opening:
 
-	autocmd! BufReadPost *.js silent JSHint
+	let g:jshint2_read = 1
 
-Lint JavaScript files before saving:
+Lint JavaScript files after saving:
 
-	autocmd! BufWritePre *.js silent JSHint
+	let g:jshint2_save = 1
 
 ## Author & License
 
