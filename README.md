@@ -13,11 +13,11 @@ Lightweight and functional Vim plugin for [JSHint](http://jshint.com/) integrati
 
 ## Installation
 
-1. Install [Node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
-2. Globally install [JSHint](http://jshint.com/install/).
+1. [Install Node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
+2. Globally [install JSHint](http://jshint.com/install/).
 3. Place [.jshintrc](http://www.jshint.com/docs/#config) into your `~`, optionally place it into your project directory.
-4. Install [Pathogen](https://github.com/tpope/vim-pathogen).
-5. Place plugin into your `~/.vim/bundle/jshint2.vim/`.
+4. [Install Pathogen](https://github.com/tpope/vim-pathogen#installation).
+5. Clone plugin into your `~/.vim/bundle/jshint2.vim/`.
 
 ## Usage
 
@@ -44,13 +44,13 @@ Quick lint mapping:
 	vnoremap <silent><F1> :JSHint<CR>
 	cnoremap <F1> JSHint
 
-Lint JavaScript files after opening:
+Lint JavaScript files after opening (place after [infectig](https://github.com/tpope/vim-pathogen#runtime-path-manipulation) Pathogen):
 
-	autocmd! BufWinEnter * if &filetype == "javascript" | silent JSHint | endif
+	autocmd! BufReadPost *.js silent JSHint
 
 Lint JavaScript files before saving:
 
-	autocmd! BufWritePost * if &filetype == "javascript" | silent JSHint | endif
+	autocmd! BufWritePre *.js silent JSHint
 
 ## Author & License
 

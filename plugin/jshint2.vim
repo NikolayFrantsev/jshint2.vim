@@ -97,28 +97,28 @@ function s:Lint(start, stop, show, ...)
 	" save buffer number
 	let l:buffer = bufnr('%')
 
-	" convert shell output into quickfix dictionary
-	let l:qflist = map(map(split(l:report, "\n"), 'split(v:val, "\t")'),
+	" convert shell output into data matrix
+	let l:matrix = map(map(split(l:report, "\n"), 'split(v:val, "\t")'),
 		\ '{"bufnr": '.l:buffer.', "lnum": str2nr(v:val[0] + a:start), "col": str2nr(v:val[1]),
 			\ "type": v:val[2], "nr": str2nr(v:val[3]), "text": v:val[4]}')
 
-	" replace quickfix with new data
-	call setqflist(l:qflist, 'r')
+	" replace location list with new data
+	call setloclist(l:buffer, l:matrix, 'r')
 
 	" save total number of errors
-	let l:length = len(l:qflist)
+	let l:length = len(l:matrix)
 	if l:length
 		echo 'There are '.l:length.' errors found!'
 
-		" open quickfix list if there is no bang
+		" open location list if there is no bang
 		if a:show
-			belowright copen
+			belowright lopen
 		endif
 	else
 		echo 'No errors found!'
 
-		" close old quickfix list
-		cclose
+		" close old location list
+		lclose
 	endif
 
 	return l:length
@@ -127,7 +127,7 @@ endfunction
 " define command function
 command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
 
-" define quickfix shortcuts
+" define location list shortcuts
 function s:Map()
 	" switch to previous buffer
 	execute "normal! \<C-W>p"
@@ -135,13 +135,13 @@ function s:Map()
 	" save plugin loaded flag
 	let g:jshint2_map = exists('b:jshint2_flags')
 
-	" switch back to quickfix list
+	" switch back to location list
 	execute "normal! \<C-W>p"
 
 	" map commands if plugin loaded
 	if g:jshint2_map
 		" open error in new tab
-		nnoremap <silent><buffer>t <C-W><CR><C-W>T:belowright copen<CR><C-W>p
+		nnoremap <silent><buffer>t <C-W><CR><C-W>T:belowright lopen<CR><C-W>p
 
 		" open error in new split
 		nnoremap <silent><buffer>s <C-W><CR><C-W>=
@@ -156,7 +156,7 @@ function s:Map()
 		nnoremap <silent><buffer>n <CR><C-W>p
 
 		" close error list
-		nnoremap <silent><buffer>q <C-W>p:cclose<CR>
+		nnoremap <silent><buffer>q :bd<CR>
 	endif
 
 	" remove loaded flag
@@ -166,7 +166,7 @@ endfunction
 " ignore selected error
 function s:Ignore()
 	" save error line
-	let l:line = getqflist()[line('.') - 1]
+	let l:line = getloclist(bufnr('%'))[line('.') - 1]
 
 	" save error number
 	let l:error = '-'.l:line['type'].(('00'.l:line['nr'])[-3:])
@@ -178,5 +178,5 @@ function s:Ignore()
 	execute ':JSHint '.b:jshint2_flags.l:error
 endfunction
 
-" define quickfix list mapper
+" define location list mapper
 autocmd FileType qf call s:Map()
