@@ -12,55 +12,56 @@ else
 	let b:jshint2_path = expand('<sfile>:p:h').'/jshint2/'
 endif
 
-" load completion dictionary
+" save completion dictionary
 execute 'let s:completion = '.substitute(system('cat '.shellescape(b:jshint2_path.'completion.json')), '\n', '', 'g')
 
-" completion for command line
+" command completion
 function! s:Complete(arg, cmd, ...)
-	" check if we already have flag key
-	let colon = stridx(a:arg, ':')
+	" find colon in current argument
+	let l:colon = stridx(a:arg, ':')
 
-	" complete matched flags
-	if colon == -1
-		" find already typed flags
-		let flags = map(filter(split(a:cmd, '\s\+'), 'stridx(v:val, ":") > -1'), 'v:val[: stridx(v:val, ":") - 1]')
+	" check if we have flag
+	if l:colon == -1
+		" save typed flags
+		let l:flags = map(filter(split(a:cmd, '\s\+'), 'stridx(v:val, ":") > -1'), 'v:val[: stridx(v:val, ":") - 1]')
 
 		" filter complete flags
-		return filter(keys(s:completion), 'index(flags, v:val) == -1 && v:val =~ "^".a:arg[: -1]')
+		return filter(keys(s:completion), 'index(l:flags, v:val) == -1 && v:val =~ "^".a:arg[: -1]')
 	endif
 
-	" find typed flag and value
-	let flag = a:arg[: colon - 1]
-	let value = a:arg[colon + 1 :]
+	" save flag and value
+	let l:flag = a:arg[: l:colon - 1]
+	let l:value = a:arg[l:colon + 1 :]
 
-	" complete flag values
-	return has_key(s:completion, flag) ? sort(map(filter(copy(s:completion[flag]), 'v:val =~ "^".value'), 'flag.":".v:val')) : []
+	" filter complete flag values
+	return has_key(s:completion, l:flag) ?
+		\ sort(map(filter(copy(s:completion[l:flag]), 'v:val =~ "^".l:value'), 'l:flag.":".v:val')) : []
 endfunction
 
 " save shell command
-let s:execute_command = 'jshint'
+let s:command = 'jshint'
 
 " save shell command arguments
-let s:execute_arguments = ' --reporter='.shellescape(b:jshint2_path.'reporter.js').' /dev/stdin'
+let s:arguments = ' --reporter='.shellescape(b:jshint2_path.'reporter.js').' /dev/stdin'
+
+" save config file name
+let s:config = '.jshintrc'
 
 " lint command constructor
 function! s:LintCommand()
 	" current file path
-	let path = expand('%:p:h')
-
-	" config file to find
-	let file = '/.jshintrc'
+	let l:path = expand('%:p:h')
 
 	" try to find config file
-	while path != '/' && !filereadable(path.file)
-		let path = fnamemodify(path, ':h')
+	while l:path != '/' && !filereadable(l:path.'/'.s:config)
+		let l:path = fnamemodify(l:path, ':h')
 	endwhile
 
 	" save config argument
-	let config = filereadable(path.file) ? ' --config='.shellescape(path.file) : ''
+	let l:config = filereadable(l:path.'/'.s:config) ? ' --config='.shellescape(l:path.'/'.s:config) : ''
 
 	" return full shell command
-	return s:execute_command.config.s:execute_arguments
+	return s:command.l:config.s:arguments
 endfunction
 
 " save buffer number
@@ -69,7 +70,7 @@ let b:jshint2_buffer = bufnr('%')
 " lint buffer
 function! s:Lint(start, stop, show, ...)
 	" check if shell binary installed
-	if !executable(s:execute_command)
+	if !executable(s:command)
 		echohl ErrorMsg
 		echo 'Seems JSHint is not installed!'
 		echohl None
@@ -77,15 +78,15 @@ function! s:Lint(start, stop, show, ...)
 		return -2
 	endif
 
-	" save command line flags
+	" save command flags
 	let b:jshint2_flags = len(a:000) ? join(a:000, ' ').' ' : ''
-	let flags = len(a:000) ? '//jshint '.join(a:000, ', ') : ''
+	let l:flags = len(a:000) ? '//jshint '.join(a:000, ', ') : ''
 
 	" save whole file or selected lines
-	let content = insert(getline(a:start, a:stop), flags)
+	let l:content = insert(getline(a:start, a:stop), l:flags)
 
 	" run shell linting command
-	let report = system(s:LintCommand(), join(content, "\n"))
+	let l:report = system(s:LintCommand(), join(l:content, "\n"))
 
 	" check for shell errors
 	if v:shell_error
@@ -97,7 +98,7 @@ function! s:Lint(start, stop, show, ...)
 	endif
 
 	" convert shell output into quickfix dictionary
-	let qflist = map(map(split(report, "\n"), 'split(v:val, "\t")'),
+	let l:qflist = map(map(split(l:report, "\n"), 'split(v:val, "\t")'),
 		\ '{"bufnr": '.b:jshint2_buffer.', "lnum": str2nr(v:val[0] + a:start), "col": str2nr(v:val[1]),
 			\ "type": v:val[2], "nr": str2nr(v:val[3]), "text": v:val[4]}')
 
@@ -105,12 +106,12 @@ function! s:Lint(start, stop, show, ...)
 	cclose
 
 	" replace quickfix with new data
-	call setqflist(qflist, 'r')
+	call setqflist(l:qflist, 'r')
 
 	" save total number of errors
-	let length = len(qflist)
-	if length
-		echo 'There are '.length.' errors found!'
+	let l:length = len(l:qflist)
+	if l:length
+		echo 'There are '.l:length.' errors found!'
 
 		" open quickfix list if there is no bang
 		if a:show
@@ -120,19 +121,19 @@ function! s:Lint(start, stop, show, ...)
 		echo 'No errors found!'
 	endif
 
-	return length
+	return l:length
 endfunction
 
-" map quickfix shortcuts
+" define quickfix shortcuts
 function! s:Map()
 	" switch to previous buffer
-	execute "normal \<C-W>p"
+	execute "normal! \<C-W>p"
 
 	" save plugin loaded flag
 	let g:jshint2_map = exists('b:jshint2_path')
 
 	" switch back to quickfix list
-	execute "normal \<C-W>p"
+	execute "normal! \<C-W>p"
 
 	" map commands if plugin loaded
 	if g:jshint2_map
@@ -159,22 +160,22 @@ function! s:Map()
 	unlet g:jshint2_map
 endfunction
 
-" revalidate ignoring selected error
+" ignore selected error
 function! b:JSHintIgnore()
 	" save error line
-	let line = getqflist()[line('.') - 1]
+	let l:line = getqflist()[line('.') - 1]
 
 	" save error number
-	let error = '-'.line['type'].(('00'.line['nr'])[-3:])
+	let l:error = '-'.l:line['type'].(('00'.l:line['nr'])[-3:])
 
 	" switch to previous buffer
-	execute "normal \<C-W>p"
+	execute "normal! \<C-W>p"
 
 	" revalidate buffer
-	execute ':JSHint '.b:jshint2_flags.error
+	execute ':JSHint '.b:jshint2_flags.l:error
 endfunction
 
-" define command line function
+" define command function
 command! -nargs=* -complete=customlist,s:Complete -range=% -bang -bar -buffer JSHint
 	\ call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
 
