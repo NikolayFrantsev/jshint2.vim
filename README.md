@@ -1,6 +1,6 @@
 # jshint2.vim
 
-Lightweight and functional Vim plugin for [JSHint](http://jshint.com/) integration.
+Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.com/) integration.
 
 ![jshint2.vim](https://raw.github.com/Shutnik/jshint2.vim/master/screenshot.png)
 
@@ -10,14 +10,17 @@ Lightweight and functional Vim plugin for [JSHint](http://jshint.com/) integrati
 * Finding configuration files inside linting file path on upper in directories.
 * Optionally opening list of linting errors with useful shortcuts.
 * Setting lint flags from command line with autocompletion.
+* Autovalidation files after reading or saving.
 
 ## Installation
 
 1. [Install Node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
-2. Globally [install JSHint](http://jshint.com/install/).
+2. [Install JSHint](http://jshint.com/install/), globally prefered (see [Configuration](#configuration)).
 3. Place [.jshintrc](http://www.jshint.com/docs/#config) into your `~`, optionally place it into your project directory.
 4. [Install Pathogen](https://github.com/tpope/vim-pathogen#installation).
 5. Clone plugin into your `~/.vim/bundle/jshint2.vim/`.
+6. ???
+7. PROFIT!
 
 ## Usage
 
@@ -35,14 +38,11 @@ Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.
 `n` — scroll to selected error.  
 `q` — close error list.  
 
-## Tips
+## Configuration
 
-Quick lint mapping:
+Set JSHint command path if it installed locally:
 
-	nnoremap <silent><F1> :JSHint<CR>
-	inoremap <silent><F1> <C-O>:JSHint<CR>
-	vnoremap <silent><F1> :JSHint<CR>
-	cnoremap <F1> JSHint
+	let g:jshint_command = '~/path/to/jshint'
 
 Lint JavaScript files after opening:
 
@@ -51,6 +51,15 @@ Lint JavaScript files after opening:
 Lint JavaScript files after saving:
 
 	let g:jshint2_save = 1
+
+## Tips
+
+Quick lint mapping:
+
+	nnoremap <silent><F1> :JSHint<CR>
+	inoremap <silent><F1> <C-O>:JSHint<CR>
+	vnoremap <silent><F1> :JSHint<CR>
+	cnoremap <F1> JSHint
 
 ## Author & License
 

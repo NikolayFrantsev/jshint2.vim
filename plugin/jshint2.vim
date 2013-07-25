@@ -42,7 +42,10 @@ endfunction
 let g:jshint2_command = 'jshint'
 
 " save shell command arguments
-let g:jshint2_arguments = ' --reporter='.shellescape(g:jshint2_path.'reporter.js').' /dev/stdin'
+let g:jshint2_arguments = '--reporter='.shellescape(g:jshint2_path.'reporter.js')
+
+" save shell input argument
+let g:jshint2_input = '/dev/stdin'
 
 " save config file name
 let g:jshint2_config = '.jshintrc'
@@ -57,11 +60,19 @@ function s:Command()
 		let l:path = fnamemodify(l:path, ':h')
 	endwhile
 
-	" save config argument
-	let l:config = filereadable(l:path.'/'.g:jshint2_config) ? ' --config='.shellescape(l:path.'/'.g:jshint2_config) : ''
+	" save lint command list
+	let l:command = [g:jshint2_command, g:jshint2_arguments, g:jshint2_input]
+
+	" save config file
+	let l:config = l:path.'/'.g:jshint2_config
+
+	" insert config argument
+	if filereadable(l:config)
+		let l:command = insert(l:command, '--config='.shellescape(l:config), 1)
+	endif
 
 	" return full shell command
-	return g:jshint2_command.l:config.g:jshint2_arguments
+	return join(l:command)
 endfunction
 
 " lint buffer
