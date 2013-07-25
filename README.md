@@ -37,6 +37,7 @@ Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.
 `i` — ignore selected error.  
 `n` — scroll to selected error.  
 `q` — close error list.  
+`?` — show help.  
 
 ## Configuration
 

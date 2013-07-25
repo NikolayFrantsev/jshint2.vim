@@ -23,10 +23,10 @@ function s:Complete(arg, cmd, ...)
 	" check if we have flag
 	if l:colon == -1
 		" save typed flags
-		let l:flags = map(filter(split(a:cmd, '\s\+'), 'stridx(v:val, ":") > -1'), 'v:val[: stridx(v:val, ":") - 1]')
+		let l:flags = map(filter(split(a:cmd, '\s\+'), 'stridx(v:val, '':'') > -1'), 'v:val[: stridx(v:val, '':'') - 1]')
 
 		" filter complete flags
-		return filter(keys(g:jshint2_completion), 'index(l:flags, v:val) == -1 && v:val =~ "^".a:arg[: -1]')
+		return filter(keys(g:jshint2_completion), 'index(l:flags, v:val) == -1 && v:val =~ ''^''.a:arg[: -1]')
 	endif
 
 	" save flag and value
@@ -35,7 +35,7 @@ function s:Complete(arg, cmd, ...)
 
 	" filter complete flag values
 	return has_key(g:jshint2_completion, l:flag) ?
-		\ sort(map(filter(copy(g:jshint2_completion[l:flag]), 'v:val =~ "^".l:value'), 'l:flag.":".v:val')) : []
+		\ sort(map(filter(copy(g:jshint2_completion[l:flag]), 'v:val =~ ''^''.l:value'), 'l:flag.'':''.v:val')) : []
 endfunction
 
 " save shell command
@@ -110,8 +110,8 @@ function s:Lint(start, stop, show, ...)
 
 	" convert shell output into data matrix
 	let l:matrix = map(map(split(l:report, "\n"), 'split(v:val, "\t")'),
-		\ '{"bufnr": '.l:buffer.', "lnum": str2nr(v:val[0] + a:start), "col": str2nr(v:val[1]),
-			\ "type": v:val[2], "nr": str2nr(v:val[3]), "text": v:val[4]}')
+		\ '{''bufnr'': '.l:buffer.', ''lnum'': str2nr(v:val[0] + a:start), ''col'': str2nr(v:val[1]),
+			\ ''type'': v:val[2], ''nr'': str2nr(v:val[3]), ''text'': v:val[4]}')
 
 	" replace location list with new data
 	call setloclist(l:buffer, l:matrix, 'r')
@@ -148,6 +148,18 @@ if exists('g:jshint2_save') && g:jshint2_save
 	autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint | endif
 endif
 
+" define shortcuts
+let g:jshint2_shortcuts = [
+	\ {'key': 't', 'info': 'open error in new tab', 'exec': '<C-W><CR><C-W>T:belowright lopen<CR><C-W>p'},
+	\ {'key': 's', 'info': 'open error in new split', 'exec': '<C-W><CR><C-W>='},
+	\ {'key': 'v', 'info': 'open error in new vertical split', 'exec': '<C-W><CR><C-W>L'},
+	\ {'key': 'i', 'info': 'ignore selected error', 'exec': ':call <SID>Ignore()<CR>'},
+	\ {'key': 'n', 'info': 'scroll to selected error', 'exec': '<CR><C-W>p'},
+	\ {'key': 'q', 'info': 'close error list', 'exec': ':bd<CR>'},
+	\ {'key': '?', 'info': 'show help',
+		\ 'exec': ':echo ''Shortcuts:''."\n".join(map(copy(g:jshint2_shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'}
+\ ]
+
 " define location list shortcuts
 function s:Map()
 	" switch to previous buffer
@@ -161,23 +173,9 @@ function s:Map()
 
 	" map commands if plugin loaded
 	if g:jshint2_map
-		" open error in new tab
-		nnoremap <silent><buffer>t <C-W><CR><C-W>T:belowright lopen<CR><C-W>p
-
-		" open error in new split
-		nnoremap <silent><buffer>s <C-W><CR><C-W>=
-
-		" open error in new vertical split
-		nnoremap <silent><buffer>v <C-W><CR><C-W>L
-
-		" ignore selected error
-		nnoremap <silent><buffer>i :call <SID>Ignore()<CR>
-
-		" scroll to selected error
-		nnoremap <silent><buffer>n <CR><C-W>p
-
-		" close error list
-		nnoremap <silent><buffer>q :bd<CR>
+		for l:item in g:jshint2_shortcuts
+			execute 'nnoremap <silent><buffer>'.l:item.key.' '.l:item.exec
+		endfor
 	endif
 
 	" remove loaded flag
