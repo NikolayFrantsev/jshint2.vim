@@ -93,6 +93,11 @@ function s:Lint(start, stop, show, ...)
 	" save whole file or selected lines
 	let l:content = insert(getline(a:start, a:stop), l:flags)
 
+	" ignore first shebang line
+	if l:content[1][:1] == '#!'
+		let l:content[1] = ''
+	endif
+
 	" run shell linting command
 	let l:report = system(s:Command(), join(l:content, "\n"))
 

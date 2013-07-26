@@ -7,6 +7,8 @@
 
 /*jshint node:true*/
 
+'use strict';
+
 exports.reporter = function (reports) {
 	var index = -1, length = reports.length,
 		error, line, code,
