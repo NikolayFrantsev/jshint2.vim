@@ -43,24 +43,44 @@ Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.
 
 Set JSHint command path if it installed locally:
 
-	let g:jshint2_command = '~/path/to/jshint'
+```vim
+let jshint2_command = '~/path/to/jshint'
+```
 
-Lint JavaScript files after opening:
+Lint JavaScript files after reading it:
 
-	let g:jshint2_read = 1
+```vim
+let jshint2_read = 1
+```
 
-Lint JavaScript files after saving:
+Lint JavaScript files after saving it:
 
-	let g:jshint2_save = 1
+```vim
+let jshint2_save = 1
+```
+
+Add error list shortcut:
+
+```vim
+let jshint2_shortcuts += [{'key': 'r', 'info': 'move error list on right', 'exec': '<C-W>L'}]
+```
+
+Add autocomplete flag:
+
+```vim
+let jshint2_completion['newfeature'] = ['true', 'false']
+```
 
 ## Tips
 
 Quick lint mapping:
 
-	nnoremap <silent><F1> :JSHint<CR>
-	inoremap <silent><F1> <C-O>:JSHint<CR>
-	vnoremap <silent><F1> :JSHint<CR>
-	cnoremap <F1> JSHint
+```vim
+nnoremap <silent><F1> :JSHint<CR>
+inoremap <silent><F1> <C-O>:JSHint<CR>
+vnoremap <silent><F1> :JSHint<CR>
+cnoremap <F1> JSHint
+```
 
 ## Author & License
 
