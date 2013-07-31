@@ -50,29 +50,6 @@ let g:jshint2_shortcuts = [
 		\ :echo ''Shortcuts:''."\n".join(map(copy(g:jshint2_shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'}
 \ ]
 
-" command completion
-function s:Complete(arg, cmd, ...)
-	" find colon in current argument
-	let l:colon = stridx(a:arg, ':')
-
-	" check if we have flag
-	if l:colon == -1
-		" save typed flags
-		let l:flags = map(filter(split(a:cmd, '\s\+'), 'stridx(v:val, '':'') > -1'), 'v:val[: stridx(v:val, '':'') - 1]')
-
-		" filter complete flags
-		return filter(keys(g:jshint2_completion), 'index(l:flags, v:val) == -1 && v:val =~ ''^''.a:arg[: -1]')
-	endif
-
-	" save flag and value
-	let l:flag = a:arg[: l:colon - 1]
-	let l:value = a:arg[l:colon + 1 :]
-
-	" filter complete flag values
-	return has_key(g:jshint2_completion, l:flag) ?
-		\ sort(map(filter(copy(g:jshint2_completion[l:flag]), 'v:val =~ ''^''.l:value'), 'l:flag.'':''.v:val')) : []
-endfunction
-
 " lint command constructor
 function s:Command()
 	" current file path
@@ -98,7 +75,7 @@ function s:Command()
 	return join(l:command)
 endfunction
 
-" lint buffer
+" lint command
 function s:Lint(start, stop, show, ...)
 	" detect file type
 	let l:filetype = &filetype
@@ -175,10 +152,30 @@ function s:Lint(start, stop, show, ...)
 	return l:length
 endfunction
 
-" define command function
-command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
+" command completion
+function s:Complete(arg, cmd, ...)
+	" find colon in current argument
+	let l:colon = stridx(a:arg, ':')
 
-" define location list shortcuts
+	" check if we have flag
+	if l:colon == -1
+		" save typed flags
+		let l:flags = map(filter(split(a:cmd, '\s\+'), 'stridx(v:val, '':'') > -1'), 'v:val[: stridx(v:val, '':'') - 1]')
+
+		" filter complete flags
+		return filter(keys(g:jshint2_completion), 'index(l:flags, v:val) == -1 && v:val =~ ''^''.a:arg[: -1]')
+	endif
+
+	" save flag and value
+	let l:flag = a:arg[: l:colon - 1]
+	let l:value = a:arg[l:colon + 1 :]
+
+	" filter complete flag values
+	return has_key(g:jshint2_completion, l:flag) ?
+		\ sort(map(filter(copy(g:jshint2_completion[l:flag]), 'v:val =~ ''^''.l:value'), 'l:flag.'':''.v:val')) : []
+endfunction
+
+" location list mapper
 function s:Map()
 	" switch to previous buffer
 	execute "normal! \<C-W>p"
@@ -200,7 +197,7 @@ function s:Map()
 	unlet g:jshint2_map
 endfunction
 
-" ignore selected error
+" revalidate ignoring selected error
 function s:Ignore()
 	" save error line
 	let l:line = getloclist(bufnr('%'))[line('.') - 1]
@@ -215,7 +212,10 @@ function s:Ignore()
 	execute ':JSHint '.b:jshint2_flags.l:error
 endfunction
 
-" define automatic commands group
+" command function
+command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
+
+" automatic commands group
 augroup jshint2
 
 	" lint files after reading
@@ -228,7 +228,7 @@ augroup jshint2
 		autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint | endif
 	endif
 
-	" define location list mapper
+	" map commands for error list
 	autocmd FileType qf call s:Map()
 
 augroup END
