@@ -143,16 +143,6 @@ endfunction
 " define command function
 command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
 
-" lint files after opening
-if exists('g:jshint2_read') && g:jshint2_read
-	autocmd BufReadPost * if &filetype == 'javascript' | silent JSHint | endif
-endif
-
-" lint files after saving
-if exists('g:jshint2_save') && g:jshint2_save
-	autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint | endif
-endif
-
 " define shortcuts
 let g:jshint2_shortcuts = [
 	\ {'key': 't', 'info': 'open error in new tab', 'exec': '<C-W><CR><C-W>T:belowright lopen<CR><C-W>p'},
@@ -202,5 +192,20 @@ function s:Ignore()
 	execute ':JSHint '.b:jshint2_flags.l:error
 endfunction
 
-" define location list mapper
-autocmd FileType qf call s:Map()
+" define automatic commands group
+augroup jshint2
+
+	" lint files after opening
+	if exists('g:jshint2_read') && g:jshint2_read
+		autocmd BufReadPost * if &filetype == 'javascript' | silent JSHint | endif
+	endif
+
+	" lint files after saving
+	if exists('g:jshint2_save') && g:jshint2_save
+		autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint | endif
+	endif
+
+	" define location list mapper
+	autocmd FileType qf call s:Map()
+
+augroup END
