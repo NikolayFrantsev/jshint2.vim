@@ -15,7 +15,7 @@ let g:jshint2_command = exists('g:jshint2_command') ? g:jshint2_command : 'jshin
 
 " define shell command arguments
 let g:jshint2_arguments = exists('g:jshint2_arguments') ? g:jshint2_arguments :
-	\ '--reporter='.shellescape(expand('<sfile>:p:h').'/jshint2/'.'reporter.js')
+	\ '--reporter='.shellescape(expand('<sfile>:p:h').'/jshint2.js')
 
 " define shell command input
 let g:jshint2_input = exists('g:jshint2_input') ? g:jshint2_input : '/dev/stdin'
