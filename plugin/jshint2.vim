@@ -10,15 +10,12 @@ if exists(':JSHint')
 	finish
 endif
 
-" define plugin path
-let s:plugin = expand('<sfile>:p:h').'/jshint2/'
-
 " define shell command
 let g:jshint2_command = exists('g:jshint2_command') ? g:jshint2_command : 'jshint'
 
 " define shell command arguments
 let g:jshint2_arguments = exists('g:jshint2_arguments') ? g:jshint2_arguments :
-	\ '--reporter='.shellescape(s:plugin.'reporter.js')
+	\ '--reporter='.shellescape(expand('<sfile>:p:h').'/jshint2/'.'reporter.js')
 
 " define shell command input
 let g:jshint2_input = exists('g:jshint2_input') ? g:jshint2_input : '/dev/stdin'
@@ -36,7 +33,80 @@ let g:jshint2_save = exists('g:jshint2_save') ? g:jshint2_save : 0
 let g:jshint2_confirm = exists('g:jshint2_confirm') ? g:jshint2_confirm : 1
 
 " define completion dictionary
-execute 'let g:jshint2_completion = '.substitute(system('cat '.shellescape(s:plugin.'completion.json')), '\n', '', 'g')
+let g:jshint2_completion = {
+	\ "asi": ["true", "false"],
+	\ "bitwise": ["true", "false"],
+	\ "boss": ["true", "false"],
+	\ "browser": ["true", "false"],
+	\ "camelcase": ["true", "false"],
+	\ "couch": ["true", "false"],
+	\ "curly": ["true", "false"],
+	\ "debug": ["true", "false"],
+	\ "devel": ["true", "false"],
+	\ "dojo": ["true", "false"],
+	\ "eqeqeq": ["true", "false"],
+	\ "eqnull": ["true", "false"],
+	\ "es3": ["true", "false"],
+	\ "es5": ["true", "false"],
+	\ "esnext": ["true", "false"],
+	\ "evil": ["true", "false"],
+	\ "expr": ["true", "false"],
+	\ "forin": ["true", "false"],
+	\ "funcscope": ["true", "false"],
+	\ "gcl": ["true", "false"],
+	\ "globalstrict": ["true", "false"],
+	\ "immed": ["true", "false"],
+	\ "indent": [2, 4, 8, "false"],
+	\ "iterator": ["true", "false"],
+	\ "jquery": ["true", "false"],
+	\ "lastsemic": ["true", "false"],
+	\ "latedef": ["nofunc", "true", "false"],
+	\ "laxbreak": ["true", "false"],
+	\ "laxcomma": ["true", "false"],
+	\ "loopfunc": ["true", "false"],
+	\ "maxcomplexity": [4, 6, 8, "false"],
+	\ "maxdepth": [4, 6, 8, "false"],
+	\ "maxerr": [25, 50, 100, "false"],
+	\ "maxlen": [64, 128, 256, 512, "false"],
+	\ "maxparams": [4, 6, 8, "false"],
+	\ "maxstatements": [4, 6, 8, "false"],
+	\ "mootools": ["true", "false"],
+	\ "moz": ["true", "false"],
+	\ "multistr": ["true", "false"],
+	\ "newcap": ["true", "false"],
+	\ "noarg": ["true", "false"],
+	\ "node": ["true", "false"],
+	\ "noempty": ["true", "false"],
+	\ "nomen": ["true", "false"],
+	\ "nonew": ["true", "false"],
+	\ "nonstandard": ["true", "false"],
+	\ "onecase": ["true", "false"],
+	\ "onevar": ["true", "false"],
+	\ "passfail": ["true", "false"],
+	\ "phantom": ["true", "false"],
+	\ "plusplus": ["true", "false"],
+	\ "proto": ["true", "false"],
+	\ "prototypejs": ["true", "false"],
+	\ "quotmark": ["single", "double", "true", "false"],
+	\ "regexdash": ["true", "false"],
+	\ "regexp": ["true", "false"],
+	\ "rhino": ["true", "false"],
+	\ "scripturl": ["true", "false"],
+	\ "shadow": ["true", "false"],
+	\ "smarttabs": ["true", "false"],
+	\ "strict": ["true", "false"],
+	\ "sub": ["true", "false"],
+	\ "supernew": ["true", "false"],
+	\ "trailing": ["true", "false"],
+	\ "undef": ["true", "false"],
+	\ "unused": ["strict", "vars", "true", "false"],
+	\ "validthis": ["true", "false"],
+	\ "white": ["true", "false"],
+	\ "withstmt": ["true", "false"],
+	\ "worker": ["true", "false"],
+	\ "wsh": ["true", "false"],
+	\ "yui": ["true", "false"]
+\ }
 
 " define error list shortcuts
 let g:jshint2_shortcuts = [
