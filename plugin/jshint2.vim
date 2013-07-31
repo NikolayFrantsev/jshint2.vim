@@ -4,6 +4,9 @@
 "
 " Author: Nikolay S. Frantsev <code@frantsev.ru>
 "
+" Distributed under GPL3 License
+" <http://www.gnu.org/licenses/gpl.html>
+"
 
 " check if plugin loaded
 if exists(':JSHint')

@@ -3,6 +3,9 @@
  * <https://github.com/Shutnik/jshint2.vim>
  *
  * Author: Nikolay S. Frantsev <code@frantsev.ru>
+ *
+ * Distributed under GPL3 License
+ * <http://www.gnu.org/licenses/gpl.html>
  */
 
 /*jshint node:true*/
