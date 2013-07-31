@@ -151,8 +151,8 @@ let g:jshint2_shortcuts = [
 	\ {'key': 'i', 'info': 'ignore selected error', 'exec': ':call <SID>Ignore()<CR>'},
 	\ {'key': 'n', 'info': 'scroll to selected error', 'exec': '<CR><C-W>p'},
 	\ {'key': 'q', 'info': 'close error list', 'exec': ':bd<CR>'},
-	\ {'key': '?', 'info': 'show help',
-		\ 'exec': ':echo ''Shortcuts:''."\n".join(map(copy(g:jshint2_shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'}
+	\ {'key': '?', 'info': 'show help', 'exec': ':redraw<CR>
+		\ :echo ''Shortcuts:''."\n".join(map(copy(g:jshint2_shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'}
 \ ]
 
 " define location list shortcuts
