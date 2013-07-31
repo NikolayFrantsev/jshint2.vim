@@ -119,7 +119,7 @@ function s:Lint(start, stop, show, ...)
 			\ ''type'': v:val[2], ''nr'': str2nr(v:val[3]), ''text'': v:val[4]}')
 
 	" replace location list with new data
-	call setloclist(l:buffer, l:matrix, 'r')
+	call setloclist(0, l:matrix, 'r')
 
 	" save total number of errors
 	let l:length = len(l:matrix)
