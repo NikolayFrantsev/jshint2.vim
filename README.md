@@ -65,18 +65,6 @@ Skip lint confirmation for non JavaScript files:
 let jshint2_confirm = 0
 ```
 
-Add error list shortcut:
-
-```vim
-let jshint2_shortcuts += [{'key': 'r', 'info': 'move error list on right', 'exec': '<C-W>L'}]
-```
-
-Add autocomplete flag:
-
-```vim
-let jshint2_completion['newfeature'] = ['true', 'false']
-```
-
 ## Tips
 
 Quick lint mapping:

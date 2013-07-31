@@ -5,15 +5,50 @@
 " Author: Nikolay S. Frantsev <code@frantsev.ru>
 "
 
-" save plugin path + load plugin once for buffer
-if exists('g:jshint2_path')
+" check if plugin loaded
+if exists(':JSHint')
 	finish
-else
-	let g:jshint2_path = expand('<sfile>:p:h').'/jshint2/'
 endif
 
-" save completion dictionary
-execute 'let g:jshint2_completion = '.substitute(system('cat '.shellescape(g:jshint2_path.'completion.json')), '\n', '', 'g')
+" define plugin path
+let s:plugin = expand('<sfile>:p:h').'/jshint2/'
+
+" define shell command
+let g:jshint2_command = exists('g:jshint2_command') ? g:jshint2_command : 'jshint'
+
+" define shell command arguments
+let g:jshint2_arguments = exists('g:jshint2_arguments') ? g:jshint2_arguments :
+	\ '--reporter='.shellescape(s:plugin.'reporter.js')
+
+" define shell command input
+let g:jshint2_input = exists('g:jshint2_input') ? g:jshint2_input : '/dev/stdin'
+
+" define config file name
+let g:jshint2_config = exists('g:jshint2_config') ? g:jshint2_config : '.jshintrc'
+
+" define lint after reading variable
+let g:jshint2_read = exists('g:jshint2_read') ? g:jshint2_read : 0
+
+" define lint after saving variable
+let g:jshint2_save = exists('g:jshint2_save') ? g:jshint2_save : 0
+
+" define show confirmation variable
+let g:jshint2_confirm = exists('g:jshint2_confirm') ? g:jshint2_confirm : 1
+
+" define completion dictionary
+execute 'let g:jshint2_completion = '.substitute(system('cat '.shellescape(s:plugin.'completion.json')), '\n', '', 'g')
+
+" define error list shortcuts
+let g:jshint2_shortcuts = [
+	\ {'key': 't', 'info': 'open error in new tab', 'exec': '<C-W><CR><C-W>T:belowright lopen<CR><C-W>p'},
+	\ {'key': 's', 'info': 'open error in new split', 'exec': '<C-W><CR><C-W>='},
+	\ {'key': 'v', 'info': 'open error in new vertical split', 'exec': '<C-W><CR><C-W>L'},
+	\ {'key': 'i', 'info': 'ignore selected error', 'exec': ':call <SID>Ignore()<CR>'},
+	\ {'key': 'n', 'info': 'scroll to selected error', 'exec': '<CR><C-W>p'},
+	\ {'key': 'q', 'info': 'close error list', 'exec': ':bd<CR>'},
+	\ {'key': '?', 'info': 'show help', 'exec': ':redraw<CR>
+		\ :echo ''Shortcuts:''."\n".join(map(copy(g:jshint2_shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'}
+\ ]
 
 " command completion
 function s:Complete(arg, cmd, ...)
@@ -37,18 +72,6 @@ function s:Complete(arg, cmd, ...)
 	return has_key(g:jshint2_completion, l:flag) ?
 		\ sort(map(filter(copy(g:jshint2_completion[l:flag]), 'v:val =~ ''^''.l:value'), 'l:flag.'':''.v:val')) : []
 endfunction
-
-" save shell command
-let g:jshint2_command = 'jshint'
-
-" save shell command arguments
-let g:jshint2_arguments = '--reporter='.shellescape(g:jshint2_path.'reporter.js')
-
-" save shell input argument
-let g:jshint2_input = '/dev/stdin'
-
-" save config file name
-let g:jshint2_config = '.jshintrc'
 
 " lint command constructor
 function s:Command()
@@ -74,9 +97,6 @@ function s:Command()
 	" return full shell command
 	return join(l:command)
 endfunction
-
-" save show confirmation variable
-let g:jshint2_confirm = 1
 
 " lint buffer
 function s:Lint(start, stop, show, ...)
@@ -158,18 +178,6 @@ endfunction
 " define command function
 command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
 
-" define shortcuts
-let g:jshint2_shortcuts = [
-	\ {'key': 't', 'info': 'open error in new tab', 'exec': '<C-W><CR><C-W>T:belowright lopen<CR><C-W>p'},
-	\ {'key': 's', 'info': 'open error in new split', 'exec': '<C-W><CR><C-W>='},
-	\ {'key': 'v', 'info': 'open error in new vertical split', 'exec': '<C-W><CR><C-W>L'},
-	\ {'key': 'i', 'info': 'ignore selected error', 'exec': ':call <SID>Ignore()<CR>'},
-	\ {'key': 'n', 'info': 'scroll to selected error', 'exec': '<CR><C-W>p'},
-	\ {'key': 'q', 'info': 'close error list', 'exec': ':bd<CR>'},
-	\ {'key': '?', 'info': 'show help', 'exec': ':redraw<CR>
-		\ :echo ''Shortcuts:''."\n".join(map(copy(g:jshint2_shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'}
-\ ]
-
 " define location list shortcuts
 function s:Map()
 	" switch to previous buffer
@@ -206,12 +214,6 @@ function s:Ignore()
 	" revalidate buffer
 	execute ':JSHint '.b:jshint2_flags.l:error
 endfunction
-
-" save lint after reading variable
-let g:jshint2_read = 0
-
-" save lint after saving variable
-let g:jshint2_save = 0
 
 " define automatic commands group
 augroup jshint2
