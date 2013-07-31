@@ -59,6 +59,12 @@ Lint JavaScript files after saving it:
 let jshint2_save = 1
 ```
 
+Skip lint confirmation for non JavaScript files:
+
+```vim
+let jshint2_confirm = 0
+```
+
 Add error list shortcut:
 
 ```vim

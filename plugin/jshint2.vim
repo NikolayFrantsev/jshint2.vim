@@ -75,8 +75,23 @@ function s:Command()
 	return join(l:command)
 endfunction
 
+" save show confirmation variable
+let g:jshint2_confirm = 1
+
 " lint buffer
 function s:Lint(start, stop, show, ...)
+	" detect file type
+	let l:filetype = &filetype
+
+	" filter error list and confirm no javascript buffers
+	if l:filetype == 'qf' || l:filetype != 'javascript' && g:jshint2_confirm &&
+			\ confirm('Current file is not JavaScript, lint it any way?', '&Yes'."\n".'&No', 1, 'Question') != 1
+		return -3
+	endif
+
+	" clear previous output
+	redraw
+
 	" check if shell binary installed
 	if !executable(g:jshint2_command)
 		echohl ErrorMsg
@@ -192,16 +207,22 @@ function s:Ignore()
 	execute ':JSHint '.b:jshint2_flags.l:error
 endfunction
 
+" save lint after reading variable
+let g:jshint2_read = 0
+
+" save lint after saving variable
+let g:jshint2_save = 0
+
 " define automatic commands group
 augroup jshint2
 
-	" lint files after opening
-	if exists('g:jshint2_read') && g:jshint2_read
+	" lint files after reading
+	if g:jshint2_read
 		autocmd BufReadPost * if &filetype == 'javascript' | silent JSHint | endif
 	endif
 
 	" lint files after saving
-	if exists('g:jshint2_save') && g:jshint2_save
+	if g:jshint2_save
 		autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint | endif
 	endif
 
