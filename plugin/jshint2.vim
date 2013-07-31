@@ -273,7 +273,7 @@ endfunction
 " revalidate ignoring selected error
 function s:Ignore()
 	" save error line
-	let l:line = getloclist(bufnr('%'))[line('.') - 1]
+	let l:line = getloclist(0)[line('.') - 1]
 
 	" save error number
 	let l:error = '-'.l:line['type'].(('00'.l:line['nr'])[-3:])
