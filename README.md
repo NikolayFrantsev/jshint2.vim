@@ -65,6 +65,12 @@ Skip lint confirmation for non JavaScript files:
 let jshint2_confirm = 0
 ```
 
+Do not use colored messages:
+
+```vim
+let jshint2_color = 0
+```
+
 ## Tips
 
 Quick lint mapping:

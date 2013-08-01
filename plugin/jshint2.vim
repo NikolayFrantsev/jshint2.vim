@@ -35,6 +35,9 @@ let g:jshint2_save = exists('g:jshint2_save') ? g:jshint2_save : 0
 " define show confirmation variable
 let g:jshint2_confirm = exists('g:jshint2_confirm') ? g:jshint2_confirm : 1
 
+" define use colors variable
+let g:jshint2_color = exists('g:jshint2_color') ? g:jshint2_color : 1
+
 " define completion dictionary
 let g:jshint2_completion = {
 	\ "asi": ["true", "false"],
@@ -148,6 +151,22 @@ function s:Command()
 	return join(l:command)
 endfunction
 
+" colorised output
+function s:Echo(type, message)
+	" set color
+	if g:jshint2_color
+		execute 'echohl '.a:type.'Msg'
+	endif
+
+	" output message
+	echo a:message
+
+	" reset color
+	if g:jshint2_color
+		echohl None
+	endif
+endfunction
+
 " lint command
 function s:Lint(start, stop, show, ...)
 	" detect file type
@@ -155,7 +174,7 @@ function s:Lint(start, stop, show, ...)
 
 	" filter error list and confirm no javascript buffers
 	if l:filetype == 'qf' || l:filetype != 'javascript' && g:jshint2_confirm &&
-			\ confirm('Current file is not JavaScript, lint it any way?', '&Yes'."\n".'&No', 1, 'Question') != 1
+			\ confirm('Current file is not JavaScript, lint it anyway?', '&Yes'."\n".'&No', 1, 'Question') != 1
 		return -3
 	endif
 
@@ -164,9 +183,7 @@ function s:Lint(start, stop, show, ...)
 
 	" check if shell binary installed
 	if !executable(g:jshint2_command)
-		echohl ErrorMsg
-		echo 'Seems JSHint is not installed!'
-		echohl None
+		call s:Echo('Error', 'JSHint is not executable!')
 
 		return -2
 	endif
@@ -188,9 +205,7 @@ function s:Lint(start, stop, show, ...)
 
 	" check for shell errors
 	if v:shell_error
-		echohl ErrorMsg
-		echo 'Error while executing JSHint!'
-		echohl None
+		call s:Echo('Error', 'Shell error while executing JSHint!')
 
 		return -1
 	endif
@@ -209,14 +224,14 @@ function s:Lint(start, stop, show, ...)
 	" save total number of errors
 	let l:length = len(l:matrix)
 	if l:length
-		echo 'There are '.l:length.' errors found!'
+		call s:Echo('Warning', 'JSHint found '.(l:length == 1 ? '1 error' : l:length.' errors').'!')
 
 		" open location list if there is no bang
 		if a:show
 			belowright lopen
 		endif
 	else
-		echo 'No errors found!'
+		call s:Echo('More', 'JSHint not found any errors!')
 
 		" close old location list
 		lclose
