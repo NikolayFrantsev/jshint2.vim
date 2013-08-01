@@ -14,8 +14,9 @@
 
 exports.reporter = function (reports) {
 	var index = -1, length = reports.length,
-		error, line, code,
-		result = '';
+		error, line,
+		result = '',
+		code;
 
 	while (++index < length) {
 		if ((line = (error = reports[index].error).line) > 1) { // filter command line flags errors
@@ -23,7 +24,8 @@ exports.reporter = function (reports) {
 				(line - 2) + '\t' + // quickfix lines starts with 1 + 1 line for command line flags
 				error.character + '\t' +
 				((typeof (code = error.code) === 'string') ? // see https://github.com/jshint/jshint/pull/1164
-					code[0] + '\t' + (+code.substring(1)) : '\t') + '\t' + // quickfix strips leading zeros in error numbers
+					code.charAt(0) + '\t' +
+						code.substring(1) + '\t' : '\t\t') +
 				error.reason + '\n';
 		}
 	}
