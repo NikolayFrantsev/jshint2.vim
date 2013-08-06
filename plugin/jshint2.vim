@@ -188,11 +188,8 @@ endfunction
 
 " lint command
 function s:Lint(start, stop, show, ...)
-	" detect file type
-	let l:filetype = &filetype
-
 	" filter error list and confirm no javascript buffers
-	if l:filetype == 'qf' || l:filetype != 'javascript' && g:jshint2_confirm &&
+	if &buftype == 'quickfix' || &filetype != 'javascript' && g:jshint2_confirm &&
 			\ confirm('Current file is not JavaScript, lint it anyway?', '&Yes'."\n".'&No', 1, 'Question') != 1
 		return -3
 	endif
