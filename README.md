@@ -71,6 +71,12 @@ Do not use colored messages:
 let jshint2_color = 0
 ```
 
+Hide error codes in error list (if you don't use error ignoring or error codes confuses you):
+
+```vim
+let jshint2_error = 0
+```
+
 ## Tips
 
 Quick lint mapping:

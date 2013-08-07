@@ -23,10 +23,11 @@ exports.reporter = function (reports) {
 			result +=
 				(line - 2) + '\t' + // quickfix lines starts with 1 + 1 line for command line flags
 				error.character + '\t' +
+				error.reason + '\t' +
 				((typeof (code = error.code) === 'string') ? // see https://github.com/jshint/jshint/pull/1164
 					code.charAt(0) + '\t' +
-						code.substring(1) + '\t' : '\t\t') +
-				error.reason + '\n';
+						code.substring(1) : '\t') +
+				'\n';
 		}
 	}
 

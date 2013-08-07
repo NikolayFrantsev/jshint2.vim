@@ -53,6 +53,11 @@ if !exists('g:jshint2_color')
 	let g:jshint2_color = 1
 endif
 
+" define show error number variable
+if !exists('g:jshint2_error')
+	let g:jshint2_error = 1
+endif
+
 " define completion dictionary
 if !exists('g:jshint2_completion')
 	let g:jshint2_completion = {
@@ -232,7 +237,7 @@ function s:Lint(start, stop, show, ...)
 	" convert shell output into data matrix
 	let l:matrix = map(map(split(l:report, "\n"), 'split(v:val, "\t")'),
 		\ '{''bufnr'': '.l:buffer.', ''lnum'': str2nr(v:val[0] + a:start), ''col'': str2nr(v:val[1]),
-			\ ''type'': v:val[2], ''nr'': str2nr(v:val[3]), ''text'': v:val[4]}')
+			\ ''text'': v:val[2]'.(g:jshint2_error ? ', ''type'': v:val[3], ''nr'': str2nr(v:val[4])' : '').'}')
 
 	" replace location list with new data
 	call setloclist(0, l:matrix, 'r')
@@ -307,14 +312,19 @@ function s:Ignore()
 	" save error line
 	let l:line = getloclist(0)[line('.') - 1]
 
-	" save error number
-	let l:error = '-'.l:line['type'].(('00'.l:line['nr'])[-3:])
+	" check error type and number
+	let l:type = l:line['type']
+	let l:number = l:line['nr']
+	if strlen(l:type) && l:number
+		" save error number
+		let l:error = '-'.l:type.(('00'.l:number)[-3:])
 
-	" switch to previous buffer
-	execute "normal! \<C-W>p"
+		" switch to previous buffer
+		execute "normal! \<C-W>p"
 
-	" revalidate buffer
-	execute ':JSHint '.b:jshint2_flags.l:error
+		" revalidate buffer
+		execute ':JSHint '.b:jshint2_flags.l:error
+	endif
 endfunction
 
 " command function
