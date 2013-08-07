@@ -240,7 +240,8 @@ function s:Lint(start, stop, show, ...)
 	" save total number of errors
 	let l:length = len(l:matrix)
 	if l:length
-		call s:Echo('Warning', 'JSHint found '.(l:length == 1 ? '1 error' : l:length.' errors').'!')
+		call s:Echo('Warning', 'JSHint found '.(l:length == 1 ? '1 error' : l:length.' errors').
+			\ matchstr(l:matrix[-1].text, ' (\d\+% scanned)').'!')
 
 		" open location list if there is no bang
 		if a:show
