@@ -2,7 +2,7 @@
 
 Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.com/) integration.
 
-![jshint2.vim](https://raw.github.com/Shutnik/jshint2.vim/master/screenshot.png)
+![jshint2.vim](https://dl.dropbox.com/s/ab95l1gnbub8m04/jshint2.vim.png)
 
 ## Features
 
