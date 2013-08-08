@@ -281,24 +281,16 @@ endfunction
 
 " location list mapper
 function s:Map()
-	" switch to previous buffer
-	execute "normal! \<C-W>p"
+	" get errors list
+	let l:errors = getloclist(0)
 
-	" save plugin loaded flag
-	let g:jshint2_map = exists('b:jshint2_flags')
-
-	" switch back to location list
-	execute "normal! \<C-W>p"
-
-	" map commands if plugin loaded
-	if g:jshint2_map
+	" check mapping necessity
+	if len(l:errors) && type(getbufvar(l:errors[0].bufnr, 'jshint2_flags')) == type([])
+		" map shortcuts
 		for l:item in g:jshint2_shortcuts
 			execute 'nnoremap <silent><buffer>'.l:item.key.' '.l:item.exec
 		endfor
 	endif
-
-	" remove loaded flag
-	unlet g:jshint2_map
 endfunction
 
 " revalidate ignoring selected error
