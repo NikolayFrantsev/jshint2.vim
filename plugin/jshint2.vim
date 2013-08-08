@@ -208,7 +208,9 @@ function s:Lint(start, stop, show, ...)
 	endif
 
 	" save command flags
-	let b:jshint2_flags = len(a:000) ? join(a:000, ' ').' ' : ''
+	let b:jshint2_flags = a:000
+
+	" save jshint flags
 	let l:flags = len(a:000) ? '//jshint '.join(a:000, ', ') : ''
 
 	" save whole file or selected lines
@@ -295,21 +297,22 @@ endfunction
 
 " revalidate ignoring selected error
 function s:Ignore()
-	" save error line
+	" get current error (no need to check errors length since mapping function do it)
 	let l:line = getloclist(0)[line('.') - 1]
 
-	" check error type and number
-	let l:type = l:line['type']
+	" get error number
 	let l:number = l:line['nr']
-	if strlen(l:type) && l:number
-		" save error number
-		let l:error = '-'.l:type.(('00'.l:number)[-3:])
 
-		" switch to previous buffer
-		execute "normal! \<C-W>p"
+	" check if showing error number not disabled
+	if l:number
+		" switch to linting buffer
+		execute bufwinnr(l:line['bufnr']).'wincmd w'
+
+		" get new error
+		let l:error = '-'.l:line['type'].(('00'.l:number)[-3:])
 
 		" revalidate buffer
-		execute ':JSHint '.b:jshint2_flags.l:error
+		execute ':JSHint '.join(b:jshint2_flags).' '.l:error
 	endif
 endfunction
 
