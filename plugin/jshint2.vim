@@ -196,7 +196,7 @@ function s:Lint(start, stop, show, ...)
 	" filter error list and confirm no javascript buffers
 	if &buftype == 'quickfix' || &filetype != 'javascript' && g:jshint2_confirm &&
 			\ confirm('Current file is not JavaScript, lint it anyway?', '&Yes'."\n".'&No', 1, 'Question') != 1
-		return -3
+		return
 	endif
 
 	" clear previous output
@@ -204,9 +204,7 @@ function s:Lint(start, stop, show, ...)
 
 	" check if shell binary installed
 	if !executable(g:jshint2_command)
-		call s:Echo('Error', 'JSHint is not executable!')
-
-		return -2
+		return s:Echo('Error', 'JSHint is not executable!')
 	endif
 
 	" save command flags
@@ -226,9 +224,7 @@ function s:Lint(start, stop, show, ...)
 
 	" check for shell errors
 	if v:shell_error
-		call s:Echo('Error', 'Shell error while executing JSHint!')
-
-		return -1
+		return s:Echo('Error', 'Shell error while executing JSHint!')
 	endif
 
 	" save buffer number
@@ -258,8 +254,6 @@ function s:Lint(start, stop, show, ...)
 		" close old location list
 		lclose
 	endif
-
-	return l:length
 endfunction
 
 " command completion
