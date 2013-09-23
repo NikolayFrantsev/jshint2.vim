@@ -2,9 +2,10 @@
  * Custom JSHint reporter for Vim plugin
  * <https://github.com/Shutnik/jshint2.vim>
  *
- * Author: Nikolay S. Frantsev <code@frantsev.ru>
+ * Author: Nikolay S. Frantsev
+ * <http://frantsev.ru/>
  *
- * Distributed under GPL3 License
+ * License: GNU GPL 3
  * <http://www.gnu.org/licenses/gpl.html>
  */
 

@@ -7,7 +7,7 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 ## Features
 
 * Linting whole file or selected lines without saving to disk.
-* Finding configuration files inside linting file path on upper in directories.
+* Finding configuration files inside linting file path or upper in directories.
 * Optionally opening list of linting errors with useful shortcuts.
 * Setting lint flags from command line with autocompletion.
 * Autovalidation files after reading or saving.
@@ -15,8 +15,8 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 ## Installation
 
 1. [Install Node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
-2. [Install JSHint](http://jshint.com/install/), globally [prefered](#configuration).
-3. Place [.jshintrc](http://www.jshint.com/docs/#config) into your `~`, optionally place it into your project directory.
+2. [Install JSHint](http://jshint.com/install/), globally [preferred](#configuration).
+3. Place [.jshintrc](http://www.jshint.com/docs/config/) into your `~`, optionally place it into your project directory.
 4. [Install Pathogen](https://github.com/tpope/vim-pathogen#installation), necessarily check [super-minimal example](https://github.com/tpope/vim-pathogen#runtime-path-manipulation).
 5. Clone plugin into your `~/.vim/bundle/jshint2.vim/`.
 6. ???
@@ -90,4 +90,4 @@ cnoremap <F1> JSHint
 
 ## Author & License
 
-Written by [Nikolay S. Frantsev](http://frantsev.ru/) under [GPL3 License](http://www.gnu.org/licenses/gpl.html).
+Written by [Nikolay S. Frantsev](http://frantsev.ru/) under [GNU GPL 3 License](http://www.gnu.org/licenses/gpl.html).
