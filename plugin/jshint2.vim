@@ -155,27 +155,34 @@ endif
 
 " lint command constructor
 function s:Command()
-	" current file path
+	" save current file path
 	let l:path = expand('%:p:h')
 
 	" try to find config file
-	while l:path != '/' && !filereadable(l:path.'/'.g:jshint2_config)
-		let l:path = fnamemodify(l:path, ':h')
+	while 1
+		" save posible config file path
+		let l:config = l:path.'/'.g:jshint2_config
+
+		" check if config file exists
+		let l:found = filereadable(l:config)
+		if l:found
+			break
+		endif
+
+		" save parent path
+		let l:parent = fnamemodify(l:path, ':h')
+
+		" check if we reach root
+		if l:path == l:parent
+			break
+		endif
+
+		" save new file path
+		let l:path = l:parent
 	endwhile
 
-	" save lint command list
-	let l:command = [g:jshint2_command, g:jshint2_arguments, g:jshint2_input]
-
-	" save config file
-	let l:config = l:path.'/'.g:jshint2_config
-
-	" insert config argument
-	if filereadable(l:config)
-		let l:command = insert(l:command, '--config='.shellescape(l:config), 1)
-	endif
-
 	" return full shell command
-	return join(l:command)
+	return g:jshint2_command.(l:found ? ' --config='.shellescape(l:config) : '').' '.g:jshint2_arguments.' '.g:jshint2_input
 endfunction
 
 " colorised output
