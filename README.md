@@ -15,9 +15,9 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 
 ## Installation
 
-1. [Install Node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
+1. [Install Node.js](http://nodejs.org/download/).
 2. [Install JSHint](http://jshint.com/install/), globally [preferred](#configuration).
-3. Place [.jshintrc](http://www.jshint.com/docs/config/) into your `~`, optionally place it into your project directory.
+3. Place [.jshintrc](http://www.jshint.com/docs/options/) into your `~`, optionally place it into your project directory.
 4. [Install Pathogen](https://github.com/tpope/vim-pathogen#installation), necessarily check [super-minimal example](https://github.com/tpope/vim-pathogen#runtime-path-manipulation).
 5. Clone plugin into your `~/.vim/bundle/jshint2.vim/`.
 6. ???
