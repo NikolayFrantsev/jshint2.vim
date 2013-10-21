@@ -24,11 +24,6 @@ if !exists('g:jshint2_arguments')
 	let g:jshint2_arguments = '--reporter='.shellescape(expand('<sfile>:p:h').'/jshint2.js')
 endif
 
-" define shell command input
-if !exists('g:jshint2_input')
-	let g:jshint2_input = '/dev/stdin'
-endif
-
 " define config file name
 if !exists('g:jshint2_config')
 	let g:jshint2_config = '.jshintrc'
@@ -182,7 +177,7 @@ function s:Command()
 	endwhile
 
 	" return full shell command
-	return g:jshint2_command.(l:found ? ' --config='.shellescape(l:config) : '').' '.g:jshint2_arguments.' '.g:jshint2_input
+	return g:jshint2_command.(l:found ? ' --config='.shellescape(l:config) : '').' '.g:jshint2_arguments.' -'
 endfunction
 
 " colorised output

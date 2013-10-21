@@ -8,9 +8,10 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 
 * Linting whole file or selected lines without saving to disk.
 * Finding configuration files inside linting file path or upper in directories.
-* Optionally opening list of linting errors with useful shortcuts.
 * Setting lint flags from command line with autocompletion.
-* Autovalidation files after reading or saving.
+* Optionally opening list of linting errors with useful shortcuts.
+* Optionally validating files after reading or saving.
+* Working on Linux, Windows and OS X.
 
 ## Installation
 
