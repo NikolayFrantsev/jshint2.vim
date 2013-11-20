@@ -199,7 +199,7 @@ endfunction
 " lint command
 function s:Lint(start, stop, show, ...)
 	" filter error list and confirm no javascript buffers
-	if &buftype == 'quickfix' || &filetype != 'javascript' && g:jshint2_confirm &&
+	if &buftype == 'quickfix' || g:jshint2_confirm && !exists('b:jshint2_flags') && &filetype != 'javascript' &&
 			\ confirm('Current file is not JavaScript, lint it anyway?', '&Yes'."\n".'&No', 1, 'Question') != 1
 		return
 	endif
