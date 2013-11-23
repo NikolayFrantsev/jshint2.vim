@@ -209,7 +209,7 @@ function s:Lint(start, stop, show, ...)
 
 	" check if shell binary installed
 	if !executable(g:jshint2_command)
-		return s:Echo('Error', 'JSHint is not executable!')
+		return s:Echo('Error', 'JSHint is not executable, check if “'.g:jshint2_command.'” callable from your terminal.')
 	endif
 
 	" save command flags
@@ -231,7 +231,7 @@ function s:Lint(start, stop, show, ...)
 
 	" check for shell errors
 	if v:shell_error
-		return s:Echo('Error', 'Shell error while executing JSHint!')
+		return s:Echo('Error', 'JSHint returns shell error “'.substitute(l:report, '[\s\n\r]\+$', '', '').'”.')
 	endif
 
 	" save buffer number
@@ -245,18 +245,22 @@ function s:Lint(start, stop, show, ...)
 	" replace location list with new data
 	call setloclist(0, l:matrix, 'r')
 
+	" save ignored errors message
+	let l:ignored = len(filter(copy(a:000), 'v:val =~ ''^-[EWI][0-9]\{3\}$''')) ? ' Some messages are ignored.' : ''
+
 	" save total number of errors
 	let l:length = len(l:matrix)
 	if l:length
-		call s:Echo('Warning', 'JSHint found '.(l:length == 1 ? '1 error' : l:length.' errors').
-			\ matchstr(l:matrix[-1].text, ' (\d\+% scanned)').'!')
+		call s:Echo('Warning', 'JSHint found '.(l:length == 1 ? '1 error' : l:length.' errors').'.'.l:ignored.
+			\ substitute(matchstr(matchstr(l:matrix[-1].text, ' (\d\+% scanned)'), '\d\+'), '\d\+',
+				\ ' About &% of file scanned.', ''))
 
 		" open location list if there is no bang
 		if a:show
 			belowright lopen
 		endif
 	else
-		call s:Echo('More', 'JSHint not found any errors!')
+		call s:Echo('More', 'JSHint did not find any errors.'.l:ignored)
 
 		" close old location list
 		lclose
