@@ -78,6 +78,12 @@ Hide error codes in error list (if you don't use error ignoring or error codes c
 let jshint2_error = 0
 ```
 
+Set default height of error list:
+
+```vim
+let jshint2_height = 20
+```
+
 ## Tips
 
 Quick lint mapping:
