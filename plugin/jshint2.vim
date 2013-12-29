@@ -54,6 +54,11 @@ if !exists('g:jshint2_error')
 	let g:jshint2_error = 1
 endif
 
+" define the default height of the error list
+if !exists('g:jshint2_height')
+	let g:jshint2_height = 10
+endif
+
 " define completion dictionary
 if !exists('g:jshint2_completion')
 	let g:jshint2_completion = {
@@ -257,7 +262,7 @@ function s:Lint(start, stop, show, ...)
 
 		" open location list if there is no bang
 		if a:show
-			belowright lopen
+			execute 'belowright lopen '.g:jshint2_height
 		endif
 	else
 		call s:Echo('More', 'JSHint did not find any errors.'.l:ignored)
