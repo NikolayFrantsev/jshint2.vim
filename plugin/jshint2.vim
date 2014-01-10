@@ -343,6 +343,8 @@ augroup jshint2
 	" lint files after saving
 	if g:jshint2_save
 		autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint | endif
+        "If last open buffer is a quickfix close it
+        autocmd BufEnter * if &buftype == 'quickfix' && winnr('$') < 2 | quit! | endif
 	endif
 
 	" map commands for error list
