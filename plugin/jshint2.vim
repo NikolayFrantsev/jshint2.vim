@@ -187,7 +187,8 @@ function s:Command()
 	endwhile
 
 	" return full shell command
-	return g:jshint2_command.(l:found ? ' --config='.shellescape(l:config) : '').' '.g:jshint2_arguments.' -'
+	return g:jshint2_command.(l:found ? ' --config='.shellescape(l:config) : '').' '.g:jshint2_arguments.
+		\ ' '.(has('win32') || has('win64') ? '-' : '/dev/stdin') " https://github.com/Shutnik/jshint2.vim/issues/8
 endfunction
 
 " colorised output

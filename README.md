@@ -11,7 +11,7 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 * Setting lint flags from command line with autocompletion.
 * Optionally opening list of linting errors with useful shortcuts.
 * Optionally validating files after reading or saving.
-* Working on Linux, Windows and OS X.
+* Working on Linux, Windows (with JSHint 2.1.5 and newer) and OS X.
 
 ## Installation
 
