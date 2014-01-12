@@ -60,6 +60,11 @@ Lint JavaScript files after saving it:
 let jshint2_save = 1
 ```
 
+Do not automatically close orphaned error lists:
+```vim
+let jshint2_close = 0
+```
+
 Skip lint confirmation for non JavaScript files:
 
 ```vim

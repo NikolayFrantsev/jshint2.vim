@@ -39,6 +39,11 @@ if !exists('g:jshint2_save')
 	let g:jshint2_save = 0
 endif
 
+" define close orphaned error lists variable
+if !exists('g:jshint2_close')
+	let g:jshint2_close = 1
+endif
+
 " define show confirmation variable
 if !exists('g:jshint2_confirm')
 	let g:jshint2_confirm = 1
@@ -306,6 +311,9 @@ function s:Map()
 		for l:item in g:jshint2_shortcuts
 			execute 'nnoremap <silent><buffer>'.l:item.key.' '.l:item.exec
 		endfor
+
+		" save buffer associated with error list
+		let b:jshint2_buffer = l:errors[0].bufnr
 	endif
 endfunction
 
@@ -343,6 +351,11 @@ augroup jshint2
 	" lint files after saving
 	if g:jshint2_save
 		autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint
+	endif
+
+	" close orphaned error lists
+	if g:jshint2_close
+		autocmd BufEnter * if exists('b:jshint2_buffer') && bufwinnr(b:jshint2_buffer) == -1 | quit
 	endif
 
 	" map commands for error list
