@@ -337,12 +337,12 @@ command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:L
 augroup jshint2
 	" lint files after reading
 	if g:jshint2_read
-		autocmd BufReadPost * if &filetype == 'javascript' | silent JSHint | endif
+		autocmd BufReadPost * if &filetype == 'javascript' | silent JSHint
 	endif
 
 	" lint files after saving
 	if g:jshint2_save
-		autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint | endif
+		autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint
 	endif
 
 	" map commands for error list
