@@ -346,17 +346,17 @@ command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:L
 augroup jshint2
 	" lint files after reading
 	if g:jshint2_read
-		autocmd BufReadPost * if &filetype == 'javascript' | silent JSHint
+		autocmd BufReadPost * if &filetype == 'javascript' | silent execute 'JSHint' | endif
 	endif
 
 	" lint files after saving
 	if g:jshint2_save
-		autocmd BufWritePost * if &filetype == 'javascript' | silent JSHint
+		autocmd BufWritePost * if &filetype == 'javascript' | silent execute 'JSHint' | endif
 	endif
 
 	" close orphaned error lists
 	if g:jshint2_close
-		autocmd BufEnter * if exists('b:jshint2_buffer') && bufwinnr(b:jshint2_buffer) == -1 | quit
+		autocmd BufEnter * if exists('b:jshint2_buffer') && bufwinnr(b:jshint2_buffer) == -1 | quit | endif
 	endif
 
 	" map commands for error list
