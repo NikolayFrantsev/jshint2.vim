@@ -208,7 +208,7 @@ function s:Echo(type, message)
 endfunction
 
 " lint command
-function s:Lint(start, stop, show, ...)
+function s:Lint(start, stop, show, flags)
 	" filter error list and confirm no javascript buffers
 	if &buftype == 'quickfix' || g:jshint2_confirm && !exists('b:jshint2_flags') && &filetype != 'javascript' &&
 			\ confirm('Current file is not JavaScript, lint it anyway?', '&Yes'."\n".'&No', 1, 'Question') != 1
@@ -224,10 +224,10 @@ function s:Lint(start, stop, show, ...)
 	endif
 
 	" save command flags
-	let b:jshint2_flags = a:000
+	let b:jshint2_flags = a:flags
 
 	" save jshint flags
-	let l:flags = len(a:000) ? '//jshint '.join(a:000, ', ') : ''
+	let l:flags = len(a:flags) ? '//jshint '.join(a:flags, ', ') : ''
 
 	" save whole file or selected lines
 	let l:content = insert(getline(a:start, a:stop), l:flags)
@@ -257,7 +257,7 @@ function s:Lint(start, stop, show, ...)
 	call setloclist(0, l:matrix, 'r')
 
 	" save ignored errors message
-	let l:ignored = len(filter(copy(a:000), 'v:val =~ ''^-[EWI][0-9]\{3\}$''')) ? ' Some messages are ignored.' : ''
+	let l:ignored = len(filter(copy(a:flags), 'v:val =~ ''^-[EWI][0-9]\{3\}$''')) ? ' Some messages are ignored.' : ''
 
 	" save total number of errors
 	let l:length = len(l:matrix)
@@ -340,7 +340,7 @@ function s:Ignore()
 endfunction
 
 " command function
-command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:Lint(<line1>, <line2>, <bang>1, <f-args>)
+command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:Lint(<line1>, <line2>, <bang>1, [<f-args>])
 
 " automatic commands group
 augroup jshint2
