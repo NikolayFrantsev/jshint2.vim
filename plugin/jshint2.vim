@@ -306,16 +306,29 @@ function s:Map()
 	" get errors list
 	let l:errors = getloclist(0)
 
-	" check mapping necessity
-	if len(l:errors) && type(getbufvar(l:errors[0].bufnr, 'jshint2_flags')) == type([])
-		" map shortcuts
-		for l:item in g:jshint2_shortcuts
-			execute 'nnoremap <silent><buffer>'.l:item.key.' '.l:item.exec
-		endfor
-
-		" save buffer associated with error list
-		let b:jshint2_buffer = l:errors[0].bufnr
+	" check errors length
+	if !len(l:errors)
+		return
 	endif
+
+	" get lint flags
+	let l:flags = getbufvar(l:errors[0].bufnr, 'jshint2_flags')
+
+	" check mapping necessity
+	if type(l:flags) != type([])
+		return
+	endif
+
+	" set buffer status line
+	execute 'setlocal statusline=[JSHint\ Error\ List]\ '.join(l:flags, '\ ')
+
+	" map shortcuts
+	for l:item in g:jshint2_shortcuts
+		execute 'nnoremap <silent><buffer>'.l:item.key.' '.l:item.exec
+	endfor
+
+	" save buffer associated with error list
+	let b:jshint2_buffer = l:errors[0].bufnr
 endfunction
 
 " revalidate ignoring selected error
@@ -327,16 +340,18 @@ function s:Ignore()
 	let l:number = l:line['nr']
 
 	" check if showing error number not disabled
-	if l:number
-		" switch to linting buffer
-		execute bufwinnr(l:line['bufnr']).'wincmd w'
-
-		" get new error
-		let l:error = '-'.l:line['type'].(('00'.l:number)[-3:])
-
-		" revalidate buffer
-		execute ':JSHint '.join(b:jshint2_flags).' '.l:error
+	if !l:number
+		return
 	endif
+
+	" switch to linting buffer
+	execute bufwinnr(l:line['bufnr']).'wincmd w'
+
+	" get new error
+	let l:error = '-'.l:line['type'].(('00'.l:number)[-3:])
+
+	" revalidate buffer
+	execute ':JSHint '.join(b:jshint2_flags).' '.l:error
 endfunction
 
 " command function
