@@ -226,6 +226,11 @@ function s:Echo(type, message)
 	endif
 endfunction
 
+" trim and clean string
+function s:Trim(str)
+	return substitute(substitute(a:str, '[\n\r]\|\s\{2,\}', ' ', 'g'), '^\s\+\|\s\+$', '', 'g')
+endfunction
+
 " lint command
 function s:Lint(start, stop, show, flags)
 	" filter third party quickfix and help buffers
@@ -244,7 +249,7 @@ function s:Lint(start, stop, show, flags)
 
 	" check if shell binary installed
 	if !executable(g:jshint2_command)
-		return s:Echo('Error', 'JSHint is not executable, check if “'.g:jshint2_command.'” callable from your terminal.')
+		return s:Echo('Error', 'JSHint is not executable, check if “'.s:Trim(g:jshint2_command).'” callable from your terminal.')
 	endif
 
 	" save command flags
@@ -269,7 +274,7 @@ function s:Lint(start, stop, show, flags)
 
 	" check for shell errors
 	if v:shell_error
-		return s:Echo('Error', 'JSHint returns shell error “'.substitute(l:report, '[\s\n\r]\+$', '', '').'”.')
+		return s:Echo('Error', 'JSHint returns shell error “'.s:Trim(l:report).'”.')
 	endif
 
 	" convert shell output into data matrix
