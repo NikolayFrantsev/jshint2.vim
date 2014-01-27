@@ -33,12 +33,12 @@ Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.
 ## Error List Shortcuts
 
 `t` — open error in new tab.  
-`s` — open error in new split.  
 `v` — open error in new vertical split.  
+`s` — open error in new horizontal split.  
 `i` — ignore selected error.  
 `n` — scroll to selected error.  
 `q` — close error list.  
-`?` — show help.  
+`?` — show shortcuts list.  
 
 ## Configuration
 

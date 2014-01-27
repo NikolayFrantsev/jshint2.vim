@@ -146,16 +146,35 @@ endif
 
 " define error list shortcuts
 if !exists('g:jshint2_shortcuts')
-	let g:jshint2_shortcuts = [
-		\ {'key': 't', 'info': 'open error in new tab', 'exec': '<C-W><CR><C-W>T:belowright lopen<CR><C-W>p'},
-		\ {'key': 's', 'info': 'open error in new split', 'exec': '<C-W><CR><C-W>='},
-		\ {'key': 'v', 'info': 'open error in new vertical split', 'exec': '<C-W><CR><C-W>L'},
-		\ {'key': 'i', 'info': 'ignore selected error', 'exec': ':call <SID>Ignore()<CR>'},
-		\ {'key': 'n', 'info': 'scroll to selected error', 'exec': '<CR><C-W>p'},
-		\ {'key': 'q', 'info': 'close error list', 'exec': ':lclose<CR>'},
-		\ {'key': '?', 'info': 'show help', 'exec': ':redraw<CR>:echo ''Shortcuts:''."\n".
-			\ join(map(copy(g:jshint2_shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'}
-	\ ]
+	let g:jshint2_shortcuts = [{
+		\ 'key': 't',
+		\ 'info': 'open error in new tab',
+		\ 'exec': '<C-W><CR><C-W>T'
+	\ }, {
+		\ 'key': 'v',
+		\ 'info': 'open error in new vertical split',
+		\ 'exec': '<C-W><CR><C-W>L<C-W>='
+	\ }, {
+		\ 'key': 's',
+		\ 'info': 'open error in new horizontal split',
+		\ 'exec': '<C-W><CR><C-W>='
+	\ }, {
+		\ 'key': 'i',
+		\ 'info': 'ignore selected error',
+		\ 'exec': ':call <SID>Ignore()<CR>'
+	\ }, {
+		\ 'key': 'n',
+		\ 'info': 'scroll to selected error',
+		\ 'exec': '<CR><C-W>p'
+	\ }, {
+		\ 'key': 'q',
+		\ 'info': 'close error list',
+		\ 'exec': ':lclose<CR>'
+	\ }, {
+		\ 'key': '?',
+		\ 'info': 'show shortcuts list',
+		\ 'exec': ':redraw<CR>:echo join(map(copy(g:jshint2_shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'
+	\ }]
 endif
 
 " lint command constructor
