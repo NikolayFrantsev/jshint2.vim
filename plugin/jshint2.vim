@@ -209,14 +209,19 @@ endfunction
 
 " lint command
 function s:Lint(start, stop, show, flags)
-	" filter error list and confirm no javascript buffers
-	if &buftype == 'quickfix' || g:jshint2_confirm && !exists('b:jshint2_flags') && &filetype != 'javascript' &&
-			\ confirm('Current file is not JavaScript, lint it anyway?', '&Yes'."\n".'&No', 1, 'Question') != 1
+	" filter third party quickfix and help buffers
+	if &buftype == 'quickfix' && !exists('b:jshint2_buffer') || &buftype == 'help'
 		return
 	endif
 
-	" clear previous output
-	redraw
+	" confirm non javascript buffers
+	if g:jshint2_confirm && &filetype != 'javascript' && !exists('b:jshint2_flags') && !exists('b:jshint2_buffer')
+		if confirm('Current file is not JavaScript, lint it anyway?', '&Yes'."\n".'&No', 1, 'Question') == 1
+			redraw
+		else
+			return
+		endif
+	endif
 
 	" check if shell binary installed
 	if !executable(g:jshint2_command)
@@ -229,8 +234,11 @@ function s:Lint(start, stop, show, flags)
 	" save jshint flags
 	let l:flags = len(a:flags) ? '//jshint '.join(a:flags, ', ') : ''
 
+	" save buffer number
+	let l:buffer = exists('b:jshint2_buffer') ? b:jshint2_buffer : bufnr('%')
+
 	" save whole file or selected lines
-	let l:content = insert(getline(a:start, a:stop), l:flags)
+	let l:content = insert(getbufline(l:buffer, a:start, a:stop), l:flags)
 
 	" ignore first shebang line
 	if l:content[1][:1] == '#!'
@@ -244,9 +252,6 @@ function s:Lint(start, stop, show, flags)
 	if v:shell_error
 		return s:Echo('Error', 'JSHint returns shell error “'.substitute(l:report, '[\s\n\r]\+$', '', '').'”.')
 	endif
-
-	" save buffer number
-	let l:buffer = bufnr('%')
 
 	" convert shell output into data matrix
 	let l:matrix = map(map(split(l:report, "\n"), 'split(v:val, "\t")'),
