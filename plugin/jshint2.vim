@@ -283,6 +283,9 @@ function s:Lint(start, stop, show, flags)
 	" save ignored errors message
 	let l:ignored = len(filter(copy(a:flags), 'v:val =~ ''^-[EWI][0-9]\{3\}$''')) ? ' Some messages are ignored.' : ''
 
+	" close and/or override height of old location list
+	lclose
+
 	" save total number of errors
 	let l:length = len(l:matrix)
 	if l:length
@@ -296,9 +299,6 @@ function s:Lint(start, stop, show, flags)
 		endif
 	else
 		call s:Echo('More', 'JSHint did not find any errors.'.l:ignored)
-
-		" close old location list
-		lclose
 	endif
 endfunction
 
