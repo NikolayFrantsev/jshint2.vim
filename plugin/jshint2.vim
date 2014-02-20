@@ -380,7 +380,7 @@ function s:Ignore()
 	let l:error = '-'.l:line['type'].(('00'.l:number)[-3:])
 
 	" revalidate buffer
-	execute ':JSHint '.join(b:jshint2_flags).' '.l:error
+	execute 'JSHint '.join(b:jshint2_flags).' '.l:error
 endfunction
 
 " command function
@@ -389,19 +389,22 @@ command! -nargs=* -complete=customlist,s:Complete -range=% -bang JSHint call s:L
 " automatic commands group
 augroup jshint2
 	" lint files after reading
-	if g:jshint2_read
-		autocmd BufReadPost * if &filetype == 'javascript' | silent execute 'JSHint' | endif
-	endif
+	autocmd BufReadPost *
+		\ if g:jshint2_read && &filetype == 'javascript' |
+			\ silent execute 'JSHint' |
+		\ endif
 
 	" lint files after saving
-	if g:jshint2_save
-		autocmd BufWritePost * if &filetype == 'javascript' | silent execute 'JSHint' | endif
-	endif
+	autocmd BufWritePost *
+		\ if g:jshint2_save && &filetype == 'javascript' |
+			\ silent execute 'JSHint' |
+		\ endif
 
 	" close orphaned error lists
-	if g:jshint2_close
-		autocmd BufEnter * if exists('b:jshint2_buffer') && bufwinnr(b:jshint2_buffer) == -1 | quit | endif
-	endif
+	autocmd BufEnter *
+		\ if g:jshint2_close && exists('b:jshint2_buffer') && bufwinnr(b:jshint2_buffer) == -1 |
+			\ quit |
+		\ endif
 
 	" map commands for error list
 	autocmd FileType qf call s:Map()
