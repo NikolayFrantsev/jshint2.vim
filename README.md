@@ -30,16 +30,6 @@ Add `!` to suppress opening error list (number of lint errors still will be show
 Add space and use tab key to complete space separated lint flags — `:JSHint white:true eqeqeq:true`.  
 Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.  
 
-## Error List Shortcuts
-
-`t` — open error in new tab.  
-`v` — open error in new vertical split.  
-`s` — open error in new horizontal split.  
-`i` — ignore selected error.  
-`n` — scroll to selected error.  
-`q` — close error list.  
-`?` — show shortcuts list.  
-
 ## Configuration
 
 Set JSHint command path if it installed locally:
@@ -89,15 +79,35 @@ Set default height of error list:
 let jshint2_height = 20
 ```
 
+## Error List Shortcuts
+
+`t` — open error in new tab.  
+`v` — open error in new vertical split.  
+`s` — open error in new horizontal split.  
+`i` — ignore selected error.  
+`n` — scroll to selected error.  
+`q` — close error list.  
+`?` — show shortcuts list.  
+
 ## Tips
 
 Quick lint mapping:
 
 ```vim
+" jshint validation
 nnoremap <silent><F1> :JSHint<CR>
 inoremap <silent><F1> <C-O>:JSHint<CR>
 vnoremap <silent><F1> :JSHint<CR>
-cnoremap <F1> JSHint
+
+" show next jshint error
+nnoremap <silent><F2> :lnext<CR>
+inoremap <silent><F2> <C-O>:lnext<CR>
+vnoremap <silent><F2> :lnext<CR>
+
+" show previous jshint error
+nnoremap <silent><F3> :lprevious<CR>
+inoremap <silent><F3> <C-O>:lprevious<CR>
+vnoremap <silent><F3> :lprevious<CR>
 ```
 
 ## Author & License
