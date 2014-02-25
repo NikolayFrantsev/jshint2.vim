@@ -121,8 +121,18 @@ function s:Lint(start, stop, show, flags)
 		return
 	endif
 
+	" save buffer number
+	let l:buffer = exists('b:jshint2_buffer') ? b:jshint2_buffer : bufnr('%')
+
+	" save buffer lines
+	let l:lines = getbufline(l:buffer, a:start, a:stop)
+
+	" save buffer hashbang flag
+	let l:hashbang = l:lines[0] == '#!/usr/bin/env node'
+
 	" confirm non javascript buffers
-	if g:jshint2_confirm && &filetype != 'javascript' && !exists('b:jshint2_flags') && !exists('b:jshint2_buffer')
+	if g:jshint2_confirm && &filetype != 'javascript' && !l:hashbang &&
+			\ !exists('b:jshint2_flags') && !exists('b:jshint2_buffer')
 		if confirm('Current file is not JavaScript, lint it anyway?', '&Yes'."\n".'&No', 1, 'Question') == 1
 			redraw
 		else
@@ -141,19 +151,13 @@ function s:Lint(start, stop, show, flags)
 	" save jshint flags
 	let l:flags = len(a:flags) ? '//jshint '.join(a:flags, ', ') : ''
 
-	" save buffer number
-	let l:buffer = exists('b:jshint2_buffer') ? b:jshint2_buffer : bufnr('%')
-
-	" save whole file or selected lines
-	let l:content = insert(getbufline(l:buffer, a:start, a:stop), l:flags)
-
-	" ignore first shebang line
-	if l:content[1][:1] == '#!'
-		let l:content[1] = ''
+	" ignore first hashbang line
+	if l:hashbang
+		let l:lines[0] = ''
 	endif
 
 	" run shell linting command
-	let l:report = system(s:Command(), join(l:content, "\n"))
+	let l:report = system(s:Command(), join(insert(l:lines, l:flags), "\n"))
 
 	" check for shell errors
 	if v:shell_error
