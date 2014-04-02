@@ -87,7 +87,6 @@ let jshint2_height = 20
 `i` — ignore selected error.  
 `n` — scroll to selected error.  
 `q` — close error list.  
-`?` — show shortcuts list.  
 
 ## Tips
 

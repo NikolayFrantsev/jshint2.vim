@@ -320,10 +320,6 @@ let s:shortcuts = [{
 	\ 'key': 'q',
 	\ 'info': 'close error list',
 	\ 'exec': ':lclose<CR>'
-\ }, {
-	\ 'key': '?',
-	\ 'info': 'show shortcuts list',
-	\ 'exec': ':redraw<CR>:echo join(map(copy(s:shortcuts), ''v:val.key." → ".v:val.info''), "\n")<CR>'
 \ }]
 
 " location list mapper
