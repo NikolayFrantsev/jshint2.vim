@@ -343,6 +343,9 @@ function s:Map()
 	" set buffer status line
 	execute 'setlocal statusline=[JSHint\ Error\ List]\ '.join(l:flags, '\ ')
 
+	" hide buffer from buffers list
+	setlocal nobuflisted
+
 	" map shortcuts
 	for l:item in s:shortcuts
 		execute 'nnoremap <silent><buffer>'.l:item.key.' '.l:item.exec
