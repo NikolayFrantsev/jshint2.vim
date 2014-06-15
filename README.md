@@ -8,6 +8,7 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 
 * Linting whole file or selected lines without saving to disk.
 * Finding configuration files inside linting file path or upper in directories.
+* Using project-specific, locally installed version of jslint (i.e. installed as dev dependency) if available.
 * Setting lint flags from command line with autocompletion.
 * Optionally opening list of linting errors with useful shortcuts.
 * Optionally validating files after reading or saving.
@@ -16,7 +17,7 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 ## Installation
 
 1. [Install Node.js](http://nodejs.org/download/).
-2. [Install JSHint](http://jshint.com/install/), globally [preferred](#configuration).
+2. [Install JSHint](http://jshint.com/install/), either globally or locally.
 3. Place [.jshintrc](http://www.jshint.com/docs/options/) into your `~`, optionally place it into your project directory.
 4. [Install Pathogen](https://github.com/tpope/vim-pathogen#installation), necessarily check [super-minimal example](https://github.com/tpope/vim-pathogen#runtime-path-manipulation).
 5. Clone plugin into your `~/.vim/bundle/jshint2.vim/`.
@@ -32,11 +33,12 @@ Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.
 
 ## Configuration
 
-Set JSHint command path if it installed locally:
+Set JSHint command path:
 
 ```vim
 let jshint2_command = '~/path/to/jshint'
 ```
+**Note** You don't need to set this if JSHint was installed via npm, either locally or globally. If you specified JSHint as a development dependency in your `package.json`, jshint2.vim will find and use that exact version.
 
 Lint JavaScript files after reading it:
 
