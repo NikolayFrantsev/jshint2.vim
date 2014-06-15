@@ -68,12 +68,12 @@ function s:Command()
 	" If jshint is installed locally (i.e. as dev dependency),
 	" we use the executable in node_modules/.bin
 	" else we use the globally installed executable.
-	let l:jshint = system('npm bin').'/jshint'
+	let l:jshint = s:Trim(system('npm bin')).'/jshint'
 	let l:is_local = filereadable(l:jshint)
 	if !l:is_local
 		let l:jshint = g:jshint2_command
 	endif
-	
+
 	" try to find config file
 	while 1
 		" save posible config file path
@@ -148,11 +148,6 @@ function s:Lint(start, stop, show, flags)
 			return
 		endif
 	endif
-
-	" check if shell binary installed
-	if !executable(g:jshint2_command)
-		return s:Echo('Error', 'JSHint is not executable, check if “'.s:Trim(g:jshint2_command).'” callable from your terminal.')
-	endfilereadable
 
 	" save command flags
 	let b:jshint2_flags = a:flags
