@@ -65,6 +65,15 @@ function s:Command()
 	" save current file path
 	let l:path = expand('%:p:h')
 
+	" If jshint is installed locally (i.e. as dev dependency),
+	" we use the executable in node_modules/.bin
+	" else we use the globally installed executable.
+	let l:jshint = system('npm bin').'/jshint'
+	let l:is_local = filereadable(l:jshint)
+	if !l:is_local
+		let l:jshint = g:jshint2_command
+	endif
+	
 	" try to find config file
 	while 1
 		" save posible config file path
@@ -89,7 +98,7 @@ function s:Command()
 	endwhile
 
 	" return full shell command
-	return g:jshint2_command.(l:found ? ' --config='.shellescape(l:config) : '').' '.s:arguments.
+	return l:jshint.(l:found ? ' --config='.shellescape(l:config) : '').' '.s:arguments.
 		\ ' '.(has('win32') || has('win64') ? '-' : '/dev/stdin') " https://github.com/Shutnik/jshint2.vim/issues/8
 endfunction
 
@@ -143,7 +152,7 @@ function s:Lint(start, stop, show, flags)
 	" check if shell binary installed
 	if !executable(g:jshint2_command)
 		return s:Echo('Error', 'JSHint is not executable, check if “'.s:Trim(g:jshint2_command).'” callable from your terminal.')
-	endif
+	endfilereadable
 
 	" save command flags
 	let b:jshint2_flags = a:flags
