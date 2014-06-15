@@ -68,11 +68,14 @@ function s:Command()
 	" If jshint is installed locally (i.e. as dev dependency),
 	" we use the executable in node_modules/.bin
 	" else we use the globally installed executable.
-	let l:jshint = s:Trim(system('npm bin')).'/jshint'
-	let l:is_local = filereadable(l:jshint)
-	if !l:is_local
-		let l:jshint = g:jshint2_command
-	endif
+    let l:jshint = g:jshint2_command
+	let l:npm_bin = system('npm bin')
+    if !v:shell_error
+        let l:local_jshint = s:Trim(l:npm_bin).'/jshint' 
+        if filereadable(l:local_jshint)
+            let l:jshint = l:local_jshint
+        endif
+    endif
 
 	" try to find config file
 	while 1
