@@ -60,20 +60,20 @@ let s:config = '.jshintrc'
 " define shell command arguments
 let s:arguments = '--reporter='.shellescape(expand('<sfile>:p:h').'/jshint2.js')
 
-" lint command constructor
-function s:Command()
+function s:FindUp(needle)
 	" save current file path
 	let l:path = expand('%:p:h')
 
-	" try to find config file
+	" Walk up the directory tree to find
+	" a file `needle`
 	while 1
-		" save posible config file path
-		let l:config = l:path.'/'.s:config
+		" save posible file path
+		let l:candidate = l:path.'/'.a:needle
+		echomsg l:candidate
 
-		" check if config file exists
-		let l:found = filereadable(l:config)
-		if l:found
-			break
+		" check if file exists
+		if filereadable(l:candidate)
+			return l:candidate
 		endif
 
 		" save parent path
@@ -87,9 +87,23 @@ function s:Command()
 		" save new file path
 		let l:path = l:parent
 	endwhile
+endfunction
 
+" lint command constructor
+function s:Command()
+
+	" If jshint is installed locally (i.e. as dev dependency),
+	" we use the executable in node_modules/.bin
+	" else we use the globally installed executable.
+	let l:jshint = s:FindUp('node_modules/.bin/jshint')
+	if l:jshint == '0'
+		let l:jshint = g:jshint2_command
+	endif
+	echomsg 'using jshint at '.l:jshint
+
+	let l:config = s:FindUp(s:config)
 	" return full shell command
-	return g:jshint2_command.(l:found ? ' --config='.shellescape(l:config) : '').' '.s:arguments.
+	return l:jshint.(l:config != '0' ? ' --config='.shellescape(l:config) : '').' '.s:arguments.
 		\ ' '.(has('win32') || has('win64') ? '-' : '/dev/stdin') " https://github.com/Shutnik/jshint2.vim/issues/8
 endfunction
 
@@ -138,11 +152,6 @@ function s:Lint(start, stop, show, flags)
 		else
 			return
 		endif
-	endif
-
-	" check if shell binary installed
-	if !executable(g:jshint2_command)
-		return s:Echo('Error', 'JSHint is not executable, check if “'.s:Trim(g:jshint2_command).'” callable from your terminal.')
 	endif
 
 	" save command flags
