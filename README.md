@@ -8,6 +8,7 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 
 * Linting whole file or selected lines without saving to disk.
 * Finding configuration files inside linting file path or upper in directories.
+* Using project-specific (locally installed) version of JSHint if available.
 * Setting lint flags from command line with autocompletion.
 * Optionally opening list of linting errors with useful shortcuts.
 * Optionally validating files after reading or saving.
@@ -32,10 +33,10 @@ Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.
 
 ## Configuration
 
-Set JSHint command path if it installed locally:
+Set global JSHint command path (mostly for Windows):
 
 ```vim
-let jshint2_command = '~/path/to/jshint'
+let jshint2_command = '~/path/to/node_mobules/.bin/jshint'
 ```
 
 Lint JavaScript files after reading it:

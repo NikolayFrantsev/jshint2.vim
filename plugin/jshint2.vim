@@ -54,43 +54,41 @@ if !exists('g:jshint2_height')
 	let g:jshint2_height = 10
 endif
 
+" define local binary path
+let s:local = 'node_modules/.bin/jshint'
+
 " define config file name
 let s:config = '.jshintrc'
 
 " define shell command arguments
 let s:arguments = '--reporter='.shellescape(expand('<sfile>:p:h').'/jshint2.js')
 
-" lint command constructor
-function s:Command()
-	" save current file path
-	let l:path = expand('%:p:h')
+" find needle file upper in root path
+function s:Find(root, needle)
+	" save root path
+	let l:root = a:root
 
-	" try to find config file
+	" try to find needle file
 	while 1
-		" save posible config file path
-		let l:config = l:path.'/'.s:config
+		" save possible needle path
+		let l:candidate = l:root.'/'.a:needle
 
-		" check if config file exists
-		let l:found = filereadable(l:config)
-		if l:found
-			break
+		" check if needle file exists
+		if filereadable(l:candidate)
+			return l:candidate
 		endif
 
-		" save parent path
-		let l:parent = fnamemodify(l:path, ':h')
+		" save head path
+		let l:head = fnamemodify(l:root, ':h')
 
 		" check if we reach root
-		if l:path == l:parent
-			break
+		if l:root == l:head
+			return ''
 		endif
 
-		" save new file path
-		let l:path = l:parent
+		" save new root path
+		let l:root = l:head
 	endwhile
-
-	" return full shell command
-	return g:jshint2_command.(l:found ? ' --config='.shellescape(l:config) : '').' '.s:arguments.
-		\ ' '.(has('win32') || has('win64') ? '-' : '/dev/stdin') " https://github.com/Shutnik/jshint2.vim/issues/8
 endfunction
 
 " colorised output
@@ -140,10 +138,29 @@ function s:Lint(start, stop, show, flags)
 		endif
 	endif
 
+	" get current file path
+	let l:path = expand('%:p:h')
+
+	" get local binary
+	let l:local = s:Find(l:path, s:local)
+
+	" save binary path
+	let l:binary = len(l:local) ? l:local : g:jshint2_command
+
 	" check if shell binary installed
-	if !executable(g:jshint2_command)
-		return s:Echo('Error', 'JSHint is not executable, check if “'.s:Trim(g:jshint2_command).'” callable from your terminal.')
+	if !executable(l:binary)
+		call s:Echo('Error', 'JSHint is not executable, check if “'.s:Trim(l:binary).'” callable from your terminal.')
+
+		return
 	endif
+
+	" get config path
+	let l:config = s:Find(l:path, s:config)
+
+	" save full shell command
+	let l:command = shellescape(l:binary).
+		\ (len(l:config) ? ' --config='.shellescape(l:config) : '').' '.s:arguments.
+			\ ' '.(has('win32') || has('win64') ? '-' : '/dev/stdin') " https://github.com/Shutnik/jshint2.vim/issues/8
 
 	" save command flags
 	let b:jshint2_flags = a:flags
@@ -157,11 +174,13 @@ function s:Lint(start, stop, show, flags)
 	endif
 
 	" run shell linting command
-	let l:report = system(s:Command(), join(insert(l:lines, l:flags), "\n"))
+	let l:report = system(l:command, join(insert(l:lines, l:flags), "\n"))
 
 	" check for shell errors
 	if v:shell_error
-		return s:Echo('Error', 'JSHint returns shell error “'.s:Trim(l:report).'”.')
+		call s:Echo('Error', 'JSHint returns shell error “'.s:Trim(l:report).'”.')
+
+		return
 	endif
 
 	" convert shell output into data matrix
