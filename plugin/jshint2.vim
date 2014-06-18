@@ -315,31 +315,14 @@ function s:Complete(arg, cmd, ...)
 endfunction
 
 " define error list shortcuts
-let s:shortcuts = [{
-	\ 'key': 't',
-	\ 'info': 'open error in new tab',
-	\ 'exec': '<C-W><CR><C-W>T'
-\ }, {
-	\ 'key': 'v',
-	\ 'info': 'open error in new vertical split',
-	\ 'exec': '<C-W><CR><C-W>L<C-W>='
-\ }, {
-	\ 'key': 's',
-	\ 'info': 'open error in new horizontal split',
-	\ 'exec': '<C-W><CR><C-W>='
-\ }, {
-	\ 'key': 'i',
-	\ 'info': 'ignore selected error',
-	\ 'exec': ':call <SID>Ignore()<CR>'
-\ }, {
-	\ 'key': 'n',
-	\ 'info': 'scroll to selected error',
-	\ 'exec': '<CR><C-W>p'
-\ }, {
-	\ 'key': 'q',
-	\ 'info': 'close error list',
-	\ 'exec': ':lclose<CR>'
-\ }]
+let s:shortcuts = {
+	\ 't': '<C-W><CR><C-W>T',
+	\ 'v': '<C-W><CR><C-W>L<C-W>=',
+	\ 's': '<C-W><CR><C-W>=',
+	\ 'i': ':call <SID>Ignore()<CR>',
+	\ 'n': '<CR><C-W>p',
+	\ 'q': ':lclose<CR>'
+\ }
 
 " location list mapper
 function s:Map()
@@ -366,8 +349,8 @@ function s:Map()
 	setlocal nobuflisted
 
 	" map shortcuts
-	for l:item in s:shortcuts
-		execute 'nnoremap <silent><buffer>'.l:item.key.' '.l:item.exec
+	for l:key in keys(s:shortcuts)
+		execute 'nnoremap <silent><buffer>'.l:key.' '.s:shortcuts[l:key]
 	endfor
 
 	" save buffer associated with error list
