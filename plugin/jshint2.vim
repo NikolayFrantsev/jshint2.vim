@@ -376,8 +376,14 @@ function s:Ignore()
 	" get new error
 	let l:error = '-'.l:line['type'].(('00'.l:number)[-3:])
 
+	" save ignore command
+	let l:ignore = 'JSHint '.join(b:jshint2_flags).' '.l:error
+
+	" push ignore command into history
+	execute histadd(':', l:ignore)
+
 	" revalidate buffer
-	execute 'JSHint '.join(b:jshint2_flags).' '.l:error
+	execute l:ignore
 endfunction
 
 " command function
