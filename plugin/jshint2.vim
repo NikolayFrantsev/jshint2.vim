@@ -163,7 +163,7 @@ function s:Lint(start, stop, show, flags)
 			\ ' '.(has('win32') || has('win64') ? '-' : '/dev/stdin') " https://github.com/Shutnik/jshint2.vim/issues/8
 
 	" save command flags
-	let b:jshint2_flags = a:flags
+	execute setbufvar(l:buffer, 'jshint2_flags', a:flags)
 
 	" save jshint flags
 	let l:flags = len(a:flags) ? '//jshint '.join(a:flags, ', ') : ''
