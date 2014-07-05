@@ -15,10 +15,10 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 
 ## Installation
 
-1. [Install Node.js](http://nodejs.org/download/) and [JSHint](http://jshint.com/install/).
-1. Optionally place [.jshintrc](http://www.jshint.com/docs/options/) into your home and/or project directory.
-1. [Install Pathogen](https://github.com/tpope/vim-pathogen) or just add `set runtimepath+=~/.vim/bundle/jshint2.vim/` into your `.vimrc`.
+1. Install [Node.js](http://nodejs.org/download/) and [JSHint](http://jshint.com/install/).
 1. Clone plugin into your `~/.vim/bundle/jshint2.vim/`.
+1. Install [Pathogen](https://github.com/tpope/vim-pathogen) or just add `set runtimepath+=~/.vim/bundle/jshint2.vim/` into your `.vimrc`.
+1. Optionally place [.jshintrc](http://www.jshint.com/docs/options/) into your home and/or project directory.
 1. ???
 1. PROFIT!
 
@@ -26,6 +26,15 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 
 Use `:JSHint` command inside Vim to lint whole file or `:'<,'>JSHint` to lint only selected lines.  
 Add `!` to suppress opening error list (number of lint errors still will be shown), add space and use tab key to complete space separated lint flags — `:JSHint! white:true eqeqeq:true`. Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.  
+
+## Error List Shortcuts
+
+`t` — open error in new tab.  
+`v` — open error in new vertical split.  
+`s` — open error in new horizontal split.  
+`i` — ignore selected error.  
+`n` — scroll to selected error.  
+`q` — close error list.  
 
 ## Configuration
 
@@ -75,15 +84,6 @@ Set default height of error list:
 ```vim
 let jshint2_height = 20
 ```
-
-## Error List Shortcuts
-
-`t` — open error in new tab.  
-`v` — open error in new vertical split.  
-`s` — open error in new horizontal split.  
-`i` — ignore selected error.  
-`n` — scroll to selected error.  
-`q` — close error list.  
 
 ## Tips
 
