@@ -91,7 +91,7 @@ function s:Find(root, needle)
 	endwhile
 endfunction
 
-" colorised output
+" colorized output
 function s:Echo(type, message)
 	" set color
 	if g:jshint2_color
@@ -317,8 +317,11 @@ endfunction
 " define error list shortcuts
 let s:shortcuts = {
 	\ 't': '<C-W><CR><C-W>T',
+	\ 'T': '<C-W><CR><C-W>T:lopen<CR><C-W>p',
 	\ 'v': '<C-W><CR><C-W>L<C-W>=',
+	\ 'V': '<C-W><CR><C-W>L:lopen<CR><C-W>p<C-W>=',
 	\ 's': '<C-W><CR><C-W>=',
+	\ 'S': '<C-W><CR>:lopen<CR><C-W>p<C-W>=',
 	\ 'i': ':call <SID>Ignore()<CR>',
 	\ 'n': '<CR><C-W>p',
 	\ 'q': ':lclose<CR>'

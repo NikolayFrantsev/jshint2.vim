@@ -30,8 +30,11 @@ Add `!` to suppress opening error list (number of lint errors still will be show
 ## Error List Shortcuts
 
 `t` — open error in new tab.  
+`T` — open error in new tab with error list.  
 `v` — open error in new vertical split.  
+`V` — open error in new vertical split with error list.  
 `s` — open error in new horizontal split.  
+`S` — open error in new horizontal split with error list.  
 `i` — ignore selected error.  
 `n` — scroll to selected error.  
 `q` — close error list.  
