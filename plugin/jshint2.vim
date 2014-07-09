@@ -163,7 +163,7 @@ function s:Lint(start, stop, show, flags)
 			\ ' '.(has('win32') || has('win64') ? '-' : '/dev/stdin') " https://github.com/Shutnik/jshint2.vim/issues/8
 
 	" save command flags
-	execute setbufvar(l:buffer, 'jshint2_flags', a:flags)
+	call setbufvar(l:buffer, 'jshint2_flags', a:flags)
 
 	" save jshint flags
 	let l:flags = len(a:flags) ? '//jshint '.join(a:flags, ', ') : ''
@@ -366,7 +366,7 @@ function s:Ignore()
 	let l:line = getloclist(0)[line('.') - 1]
 
 	" get error number
-	let l:number = l:line['nr']
+	let l:number = l:line.nr
 
 	" check if showing error number not disabled
 	if !l:number
@@ -374,16 +374,16 @@ function s:Ignore()
 	endif
 
 	" switch to linting buffer
-	execute bufwinnr(l:line['bufnr']).'wincmd w'
+	execute bufwinnr(l:line.bufnr).'wincmd w'
 
 	" get new error
-	let l:error = '-'.l:line['type'].(('00'.l:number)[-3:])
+	let l:error = '-'.l:line.type.(('00'.l:number)[-3 :])
 
 	" save ignore command
 	let l:ignore = 'JSHint '.join(b:jshint2_flags).' '.l:error
 
 	" push ignore command into history
-	execute histadd(':', l:ignore)
+	call histadd(':', l:ignore)
 
 	" revalidate buffer
 	execute l:ignore
