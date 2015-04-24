@@ -49,9 +49,14 @@ if !exists('g:jshint2_error')
 	let g:jshint2_error = 1
 endif
 
-" define error list height variable
-if !exists('g:jshint2_height')
-	let g:jshint2_height = 10
+" define error list min height variable
+if !exists('g:jshint2_min_height')
+	let g:jshint2_min_height = 3
+endif
+
+" define error list max height variable
+if !exists('g:jshint2_max_height')
+	let g:jshint2_max_height = 12
 endif
 
 " define local binary path
@@ -206,7 +211,12 @@ function s:Lint(start, stop, show, flags)
 
 		" open location list if there is no bang
 		if a:show
-			execute 'belowright lopen '.g:jshint2_height
+			let l:length = l:length + 1
+
+			let l:height = (l:length < g:jshint2_min_height ? g:jshint2_min_height :
+				\ (l:length + 1 > g:jshint2_max_height ? g:jshint2_max_height : l:length))
+
+			execute 'belowright lopen '.l:height
 		endif
 	else
 		call s:Echo('More', 'JSHint did not find any errors.'.l:ignored)
