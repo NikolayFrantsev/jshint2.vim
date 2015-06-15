@@ -85,8 +85,8 @@ let jshint2_error = 0
 Set min and max height of error list:
 
 ```vim
-let jshint2_height = 3
-let jshint2_height = 12
+let jshint2_min_height = 3
+let jshint2_max_height = 12
 ```
 
 ## Tips
