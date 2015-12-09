@@ -44,7 +44,7 @@ Add `!` to suppress opening error list (number of lint errors still will be show
 Set global JSHint command path (mostly for Windows):
 
 ```vim
-let jshint2_command = '~/path/to/node_mobules/.bin/jshint'
+let jshint2_command = '~/path/to/node_modules/.bin/jshint'
 ```
 
 Lint JavaScript files after reading it:
