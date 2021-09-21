@@ -2,7 +2,7 @@
 
 Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.com/) integration.
 
-![jshint2.vim](https://dl.dropbox.com/s/ab95l1gnbub8m04/jshint2.vim.png)
+![jshint2.vim](/jshint2.vim.png)
 
 ## Features
 
@@ -24,20 +24,20 @@ Lightweight, customizable and functional Vim plugin for [JSHint](http://jshint.c
 
 ## Usage
 
-Use `:JSHint` command inside Vim to lint whole file or `:'<,'>JSHint` to lint only selected lines.  
-Add `!` to suppress opening error list (number of lint errors still will be shown), add space and use tab key to complete space separated lint flags — `:JSHint! white:true eqeqeq:true`. Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.  
+Use `:JSHint` command inside Vim to lint whole file or `:'<,'>JSHint` to lint only selected lines.
+Add `!` to suppress opening error list (number of lint errors still will be shown), add space and use tab key to complete space separated lint flags — `:JSHint! white:true eqeqeq:true`. Use `-` to ignore errors by their codes — `:JSHint -E001 -W002 -I003`.
 
 ## Error List Shortcuts
 
-`t` — open error in new tab.  
-`T` — open error in new tab with error list.  
-`v` — open error in new vertical split.  
-`V` — open error in new vertical split with error list.  
-`s` — open error in new horizontal split.  
-`S` — open error in new horizontal split with error list.  
-`i` — ignore selected error.  
-`n` — scroll to selected error.  
-`q` — close error list.  
+`t` — open error in new tab.
+`T` — open error in new tab with error list.
+`v` — open error in new vertical split.
+`V` — open error in new vertical split with error list.
+`s` — open error in new horizontal split.
+`S` — open error in new horizontal split with error list.
+`i` — ignore selected error.
+`n` — scroll to selected error.
+`q` — close error list.
 
 ## Configuration
 
